@@ -1,0 +1,136 @@
+.grid {
+  display: grid;
+  gap: var(--space-gap);
+}
+
+.grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.stack-sm {
+  display: grid;
+  gap: 10px;
+}
+
+.stack-md {
+  display: grid;
+  gap: 14px;
+}
+
+.mb-4 {
+  margin-bottom: 16px;
+}
+
+.mb-5 {
+  margin-bottom: 22px;
+}
+
+.mt-4 {
+  margin-top: 16px;
+}
+
+[data-reveal] {
+  --reveal-delay: 0ms;
+  opacity: 1;
+  transform: none;
+}
+
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px) scale(0.985);
+  transition: opacity var(--motion-slow) var(--ease-standard) var(--reveal-delay),
+    transform var(--motion-slow) var(--ease-standard) var(--reveal-delay);
+}
+
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.project-grid {
+  contain: layout paint style;
+}
+
+@keyframes listIntroIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.992);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.js [data-list-intro] > [data-list-intro-item] {
+  opacity: 1;
+  transform: none;
+}
+
+.js [data-list-intro] > [data-list-intro-item][data-list-intro-active] {
+  opacity: 0;
+  transform: translateY(12px) scale(0.992);
+  animation: listIntroIn 420ms var(--ease-standard) both;
+  animation-delay: var(--list-intro-delay, 0ms);
+}
+
+@supports (content-visibility: auto) {
+  .project-grid > * {
+    content-visibility: auto;
+    contain-intrinsic-size: 280px 240px;
+  }
+}
+
+.progressive-sentinel {
+  height: 1px;
+  width: 100%;
+}
+
+.member-card {
+  transition: opacity var(--motion-mid) var(--ease-standard), transform var(--motion-mid) var(--ease-standard);
+}
+
+.member-card.is-filter-hidden {
+  display: none;
+}
+
+[data-list-card].is-filter-hidden {
+  display: none;
+}
+
+.member-card.is-filter-visible {
+  animation: memberIn 360ms var(--ease-standard);
+}
+
+@keyframes memberIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .js [data-list-intro] > [data-list-intro-item][data-list-intro-active] {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .member-card.is-filter-visible {
+    animation: none;
+  }
+}

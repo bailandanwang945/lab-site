@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { resolveMemberAvatar } from '../../../utils/member-avatar';
+import { pickI18nText } from '../../../utils/i18n-text';
+
+export async function getStaticPaths() {
+  const members = await getCollection('members');
+  return members.map((entry) => {
+    const id = entry.data.id ?? entry.slug;
+    return {
+      params: { id },
+      props: { member: { ...entry.data, id, avatarResolved: resolveMemberAvatar(entry.data) } },
+    };
+  });
+}
+
+const { member } = Astro.props;
+const nameText = pickI18nText(member.name, 'en');
+const areaText = pickI18nText(member.area, 'en');
+const bio = pickI18nText(member.bio, 'en');
+const links = member.links;
+const hasLinks = Boolean(links?.scholar || links?.github || links?.homepage || links?.email);
+const pageDesc = bio || `${member.role.en}. Research area: ${areaText}.`;
+---
+<BaseLayout title={nameText} desc={pageDesc} lang="en" pathPrefix="/en">
+  <section class="detail-shell">
+    <article class="card detail-hero detail-hero-member" data-reveal>
+      <div class="detail-hero-main">
+        <h1 class="page-title">{nameText}</h1>
+        <div class="detail-meta">
+          <span class="badge">{member.role.en}</span>
+          <span class="badge-muted">{areaText}</span>
+        </div>
+      </div>
+      <img
+        class="member-avatar member-avatar-lg"
+        src={member.avatarResolved}
+        alt={`${nameText} avatar`}
+        loading="eager"
+        decoding="async"
+      />
+    </article>
+
+    {bio && (
+      <article class="card detail-content" data-reveal>
+        <h2>About</h2>
+        <p>{bio}</p>
+      </article>
+    )}
+
+    {hasLinks && (
+      <article class="card detail-section" data-reveal>
+        <h2>Links</h2>
+        <div class="detail-links">
+          {links?.scholar && <a class="btn btn-ghost" href={links.scholar} target="_blank" rel="noreferrer">Google Scholar</a>}
+          {links?.github && <a class="btn btn-ghost" href={links.github} target="_blank" rel="noreferrer">GitHub</a>}
+          {links?.homepage && <a class="btn btn-ghost" href={links.homepage} target="_blank" rel="noreferrer">Homepage</a>}
+          {links?.email && (
+            <button
+              class="member-email"
+              type="button"
+              data-copy-text={links.email}
+              data-copy-label={links.email}
+              data-copy-success="Copied"
+              title="Click to copy email"
+            >
+              {links.email}
+            </button>
+          )}
+        </div>
+      </article>
+    )}
+
+    <div class="back-row" data-reveal>
+      <a class="btn btn-primary" href="/en/members/">Back to Members</a>
+      <a class="btn btn-ghost" href="/en/">Back to Home</a>
+    </div>
+  </section>
+</BaseLayout>

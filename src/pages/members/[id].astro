@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { resolveMemberAvatar } from '../../utils/member-avatar';
+import { pickI18nText } from '../../utils/i18n-text';
+
+export async function getStaticPaths() {
+  const members = await getCollection('members');
+  return members.map((entry) => {
+    const id = entry.data.id ?? entry.slug;
+    return {
+      params: { id },
+      props: { member: { ...entry.data, id, avatarResolved: resolveMemberAvatar(entry.data) } },
+    };
+  });
+}
+
+const { member } = Astro.props;
+const nameText = pickI18nText(member.name, 'zh');
+const areaText = pickI18nText(member.area, 'zh');
+const bio = pickI18nText(member.bio, 'zh');
+const links = member.links;
+const hasLinks = Boolean(links?.scholar || links?.github || links?.homepage || links?.email);
+const pageDesc = bio || `${member.role.zh}，研究方向：${areaText}。`;
+---
+<BaseLayout title={nameText} desc={pageDesc} lang="zh" pathPrefix="">
+  <section class="detail-shell">
+    <article class="card detail-hero detail-hero-member" data-reveal>
+      <div class="detail-hero-main">
+        <h1 class="page-title">{nameText}</h1>
+        <div class="detail-meta">
+          <span class="badge">{member.role.zh}</span>
+          <span class="badge-muted">{areaText}</span>
+        </div>
+      </div>
+      <img
+        class="member-avatar member-avatar-lg"
+        src={member.avatarResolved}
+        alt={`${nameText} 头像`}
+        loading="eager"
+        decoding="async"
+      />
+    </article>
+
+    {bio && (
+      <article class="card detail-content" data-reveal>
+        <h2>简介</h2>
+        <p>{bio}</p>
+      </article>
+    )}
+
+    {hasLinks && (
+      <article class="card detail-section" data-reveal>
+        <h2>链接</h2>
+        <div class="detail-links">
+          {links?.scholar && <a class="btn btn-ghost" href={links.scholar} target="_blank" rel="noreferrer">Google Scholar</a>}
+          {links?.github && <a class="btn btn-ghost" href={links.github} target="_blank" rel="noreferrer">GitHub</a>}
+          {links?.homepage && <a class="btn btn-ghost" href={links.homepage} target="_blank" rel="noreferrer">Homepage</a>}
+          {links?.email && (
+            <button
+              class="member-email"
+              type="button"
+              data-copy-text={links.email}
+              data-copy-label={links.email}
+              data-copy-success="已复制"
+              title="点击复制邮箱"
+            >
+              {links.email}
+            </button>
+          )}
+        </div>
+      </article>
+    )}
+
+    <div class="back-row" data-reveal>
+      <a class="btn btn-primary" href="/members/">返回成员列表</a>
+      <a class="btn btn-ghost" href="/">回到首页</a>
+    </div>
+  </section>
+</BaseLayout>

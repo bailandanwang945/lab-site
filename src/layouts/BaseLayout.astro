@@ -1,0 +1,188 @@
+---
+import siteZh from '../data/site.zh.json';
+import siteEn from '../data/site.en.json';
+import { ClientRouter } from 'astro:transitions';
+import { buildDefaultLocaleAlternates, normalizeSitePath, toAbsoluteUrl } from '../utils/seo';
+import type { LocaleAlternates } from '../utils/seo';
+
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/components.css';
+import '../styles/effects.css';
+import '../styles/utilities.css';
+
+import revealScript from '../scripts/reveal.mjs?url';
+import uiScript from '../scripts/ui.mjs?url';
+import navbarScrollScript from '../scripts/navbar-scroll.mjs?url';
+
+const {
+  title = '',
+  desc,
+  lang = 'zh',
+  pathPrefix = '',
+  ogType = 'website',
+  ogImage = '/images/DDLab_logo.png',
+  noindex = false,
+  disableCanonical = false,
+  disableLocaleAlternates = false,
+  localeAlternates,
+} = Astro.props as {
+  title?: string;
+  desc?: string;
+  lang?: 'zh' | 'en';
+  pathPrefix?: string;
+  ogType?: 'website' | 'article';
+  ogImage?: string;
+  noindex?: boolean;
+  disableCanonical?: boolean;
+  disableLocaleAlternates?: boolean;
+  localeAlternates?: LocaleAlternates;
+};
+
+const t = lang === 'en' ? siteEn : siteZh;
+const description = desc || t.home.intro;
+const currentPath = normalizeSitePath(Astro.url.pathname);
+const hasExplicitLocaleAlternates = Object.prototype.hasOwnProperty.call(Astro.props, 'localeAlternates');
+const resolvedLocaleAlternates = hasExplicitLocaleAlternates ? localeAlternates ?? {} : buildDefaultLocaleAlternates(currentPath);
+const zhPath = resolvedLocaleAlternates.zh ? normalizeSitePath(resolvedLocaleAlternates.zh) : undefined;
+const enPath = resolvedLocaleAlternates.en ? normalizeSitePath(resolvedLocaleAlternates.en) : undefined;
+const xDefaultPath = resolvedLocaleAlternates.xDefault
+  ? normalizeSitePath(resolvedLocaleAlternates.xDefault)
+  : zhPath || enPath;
+const canonicalPath = lang === 'en' ? enPath || currentPath : zhPath || currentPath;
+const siteUrl = import.meta.env.PUBLIC_SITE_URL || import.meta.env.SITE_URL || Astro.site;
+const canonicalUrl = toAbsoluteUrl(canonicalPath, siteUrl);
+const ogImageUrl = toAbsoluteUrl(ogImage, siteUrl);
+const localeSwitchHref = disableLocaleAlternates ? undefined : lang === 'zh' ? enPath : zhPath;
+const hasAlternateLocale = Boolean(localeSwitchHref);
+const localeLabel = lang === 'zh' ? '中文' : 'English';
+const alternateLocaleLabel = lang === 'zh' ? 'English' : '中文';
+const ogLocale = lang === 'zh' ? 'zh_CN' : 'en_US';
+const alternateOgLocale = lang === 'zh' ? 'en_US' : 'zh_CN';
+const navPath = {
+  home: `${pathPrefix}/`,
+  members: `${pathPrefix}/members`,
+  projects: `${pathPrefix}/projects`,
+  papers: `${pathPrefix}/papers`,
+  news: `${pathPrefix}/news`,
+  join: `${pathPrefix}/join`,
+  life: `${pathPrefix}/life`,
+};
+const navPathResolved = {
+  home: normalizeSitePath(navPath.home),
+  members: normalizeSitePath(navPath.members),
+  projects: normalizeSitePath(navPath.projects),
+  papers: normalizeSitePath(navPath.papers),
+  news: normalizeSitePath(navPath.news),
+  join: normalizeSitePath(navPath.join),
+  life: normalizeSitePath(navPath.life),
+};
+---
+<!doctype html>
+<html lang={lang === 'zh' ? 'zh-CN' : 'en'} class="js">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title ? `${title} · ${t.siteName}` : t.siteName}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+    {!disableCanonical && <link rel="canonical" href={canonicalUrl} />}
+    {!disableLocaleAlternates && zhPath && <link rel="alternate" hreflang="zh-CN" href={toAbsoluteUrl(zhPath, siteUrl)} />}
+    {!disableLocaleAlternates && enPath && <link rel="alternate" hreflang="en" href={toAbsoluteUrl(enPath, siteUrl)} />}
+    {!disableLocaleAlternates && xDefaultPath && <link rel="alternate" hreflang="x-default" href={toAbsoluteUrl(xDefaultPath, siteUrl)} />}
+    <meta property="og:site_name" content={t.siteName} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title ? `${title} · ${t.siteName}` : t.siteName} />
+    <meta property="og:description" content={description} />
+    {!disableCanonical && <meta property="og:url" content={canonicalUrl} />}
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content={title ? `${title} · ${t.siteName}` : t.siteName} />
+    <meta property="og:locale" content={ogLocale} />
+    {!disableLocaleAlternates && hasAlternateLocale && <meta property="og:locale:alternate" content={alternateOgLocale} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title ? `${title} · ${t.siteName}` : t.siteName} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <ClientRouter />
+    <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="icon" type="image/png" href="/images/DDLab_logo.png" />
+    <link rel="apple-touch-icon" href="/images/DDLab_logo.png" />
+    <script is:inline>
+      (() => {
+        const saved = localStorage.getItem('lab-theme');
+        const preferred = saved || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', preferred);
+      })();
+    </script>
+    <noscript>
+      <style>
+        .js [data-reveal],
+        .js [data-list-intro] > [data-list-intro-item][data-list-intro-active] {
+          opacity: 1 !important;
+          transform: none !important;
+          animation: none !important;
+          transition: none !important;
+        }
+      </style>
+    </noscript>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav">
+        <div class="brand">{t.brand}</div>
+        <nav class="nav-links">
+          <a class={`nav-link ${currentPath === navPathResolved.home ? 'is-active' : ''}`} href={navPathResolved.home}>{t.nav.home}</a>
+          <a class={`nav-link ${currentPath.startsWith(navPathResolved.members) ? 'is-active' : ''}`} href={navPathResolved.members}>{t.nav.members}</a>
+          <a class={`nav-link ${currentPath.startsWith(navPathResolved.projects) ? 'is-active' : ''}`} href={navPathResolved.projects}>{t.nav.projects}</a>
+          <a class={`nav-link ${currentPath.startsWith(navPathResolved.papers) ? 'is-active' : ''}`} href={navPathResolved.papers}>{t.nav.papers}</a>
+          <a class={`nav-link ${currentPath.startsWith(navPathResolved.news) ? 'is-active' : ''}`} href={navPathResolved.news}>{t.nav.news}</a>
+          <a class={`nav-link ${currentPath.startsWith(navPathResolved.life) ? 'is-active' : ''}`} href={navPathResolved.life}>{t.nav.life}</a>
+          <a class={`nav-link nav-link-cta ${currentPath.startsWith(navPathResolved.join) ? 'is-active' : ''}`} href={navPathResolved.join}>{t.nav.join}</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="btn btn-ghost" data-theme-toggle type="button" aria-label="Switch theme">Dark</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container site-shell">
+      <slot />
+    </main>
+    <footer class="footer">
+      <div class="container footer-inner">
+        <span class="lang-switch">
+          {lang === 'zh' ? (
+            <>
+              <span aria-current="page">{localeLabel}</span>
+              {localeSwitchHref && (
+                <>
+                  {' / '}
+                  <a href={localeSwitchHref}>{alternateLocaleLabel}</a>
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              {localeSwitchHref && (
+                <>
+                  <a href={localeSwitchHref}>{alternateLocaleLabel}</a>
+                  {' / '}
+                </>
+              )}
+              <span aria-current="page">{localeLabel}</span>
+            </>
+          )}
+        </span>
+        <span>© 2026 {t.siteName}</span>
+        <span>
+          <a href="https://github.com/nightt5879/doubleducklab" target="_blank" rel="noreferrer">
+            GitHub
+          </a>
+        </span>
+      </div>
+    </footer>
+    <script type="module" src={revealScript}></script>
+    <script type="module" src={uiScript}></script>
+    <script type="module" src={navbarScrollScript}></script>
+  </body>
+</html>

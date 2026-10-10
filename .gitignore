@@ -1,0 +1,24 @@
+# 依赖与构建产物：不进版本库
+node_modules/
+dist/
+.astro/
+
+# 私密配置：.env 含仓库地址等信息，不上传；
+# 但 .env.example 是部署流程的说明文件，需要保留。
+.env
+.env.local
+.env.*.local
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# 原模板作者的内部开发资料，与课题组无关，不进公开仓库
+.agent/
+decisions/
+docs/
+ops/
+sources/

@@ -1,0 +1,142 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { resolveMemberAvatar } from '../../utils/member-avatar';
+import { pickI18nText } from '../../utils/i18n-text';
+
+const memberEntries = await getCollection('members');
+const roleOrder = ['PI', 'PhD', 'Master', 'RA'];
+const roleRank = new Map(roleOrder.map((role, index) => [role, index]));
+const currentStatuses = ['Current', 'Active'];
+const formerStatuses = ['Alumni', 'Former'];
+const leadRoleKeywordsEn = ['pi', 'advisor', 'professor', 'supervisor', 'faculty', 'director', 'lead'];
+
+function isLeadRoleEn(roleEn: string) {
+  const role = (roleEn || '').toLowerCase();
+  return leadRoleKeywordsEn.some((keyword) => role.includes(keyword));
+}
+
+function getRoleRankEn(roleEn: string) {
+  const exact = roleRank.get(roleEn);
+  if (typeof exact === 'number') {
+    return exact;
+  }
+  const role = (roleEn || '').toLowerCase();
+  if (isLeadRoleEn(roleEn)) {
+    return 0;
+  }
+  if (role.includes('phd') || role.includes('doctoral')) {
+    return 1;
+  }
+  if (role.includes('master')) {
+    return 2;
+  }
+  if (role === 'ra' || role.includes('research assistant') || role.includes('assistant')) {
+    return 3;
+  }
+  return Number.MAX_SAFE_INTEGER;
+}
+
+function resolveStatusGroup(roleEn: string, statusEn: string) {
+  if (isLeadRoleEn(roleEn)) {
+    return 0;
+  }
+  if (currentStatuses.includes(statusEn)) {
+    return 1;
+  }
+  if (formerStatuses.includes(statusEn)) {
+    return 2;
+  }
+  return 1;
+}
+
+function resolveStatusTone(statusEn: string) {
+  if (formerStatuses.includes(statusEn)) {
+    return 'former';
+  }
+  return 'current';
+}
+
+const membersWithId = memberEntries
+  .map((e) => ({
+    ...e.data,
+    id: e.data.id ?? e.slug,
+    nameText: pickI18nText(e.data.name, 'en'),
+    areaText: pickI18nText(e.data.area, 'en'),
+    statusText: pickI18nText(e.data.status, 'en'),
+    avatarResolved: resolveMemberAvatar(e.data),
+  }))
+  .sort((a, b) => {
+    const groupA = resolveStatusGroup(a.role.en, a.statusText);
+    const groupB = resolveStatusGroup(b.role.en, b.statusText);
+    if (groupA !== groupB) {
+      return groupA - groupB;
+    }
+    const rankA = getRoleRankEn(a.role.en);
+    const rankB = getRoleRankEn(b.role.en);
+    return rankA - rankB || a.nameText.localeCompare(b.nameText);
+  });
+const roleSet = new Set(membersWithId.map((m) => m.role.en));
+const extraRoles = Array.from(roleSet).filter((role) => !roleOrder.includes(role)).sort();
+const roles = ['All', ...roleOrder.filter((role) => roleSet.has(role)), ...extraRoles];
+const pageDesc = 'Browse DoubleDuckLab members, roles, research areas, and current status.';
+
+---
+<BaseLayout title="Members" desc={pageDesc} lang="en" pathPrefix="/en">
+  <section class="page-head" data-reveal>
+    <h1 class="page-title">Members</h1>
+  </section>
+
+  <section class="filter-wrap" data-members-filter-root data-reveal>
+    <input
+      class="filter-input"
+      type="search"
+      data-member-search
+      placeholder="Search name / area / role..."
+      aria-label="Search members"
+    />
+
+    <div class="filter-tags">
+      {roles.map((role, i) => (
+        <button
+          class={`filter-tag ${i === 0 ? 'is-selected' : ''}`}
+          type="button"
+          data-role-filter={i === 0 ? '__all' : role.toLowerCase()}
+        >
+          {role}
+        </button>
+      ))}
+    </div>
+
+    <p class="empty-state" data-empty-state hidden>No matching member found. Try another keyword or role.</p>
+
+    <div class="grid grid-3" data-reveal-group>
+      {membersWithId.map((m, i) => (
+        <a
+          href={`/en/members/${m.id}/`}
+          class="card card-hover card-link member-card"
+          data-member-card
+          data-name={m.nameText}
+          data-role={m.role.en}
+          data-area={m.areaText}
+          data-reveal
+          data-reveal-order={String(i)}
+        >
+          {m.statusText && !isLeadRoleEn(m.role.en) && (
+            <span class={`member-status status-${resolveStatusTone(m.statusText)}`}>{m.statusText}</span>
+          )}
+          <img
+            class="member-avatar"
+            src={m.avatarResolved}
+            alt={`${m.nameText} avatar`}
+            loading="lazy"
+            decoding="async"
+          />
+          <h3>{m.nameText}</h3>
+          <p class="member-role"><span class="badge-muted">{m.role.en}</span></p>
+          <p class="mt-4">{m.areaText}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

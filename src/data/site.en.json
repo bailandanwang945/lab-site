@@ -1,0 +1,35 @@
+{
+  "brand": "Group Name Placeholder",
+  "siteName": "Group Name Placeholder",
+  "nav": {
+    "home": "Home",
+    "members": "Members",
+    "projects": "Projects",
+    "papers": "Papers",
+    "news": "News",
+    "life": "Lab Life",
+    "join": "Join Us"
+  },
+  "home": {
+    "intro": "One-sentence description of the group: research positioning and team size, around 40-80 words. Replace brand / siteName and this paragraph to establish the first impression.",
+    "sections": {
+      "highlights": "Highlights",
+      "recentProjects": "Ongoing Projects"
+    },
+    "highlights": [
+      {
+        "title": "Research Directions",
+        "desc": "List 3-4 main research directions, one sentence each on what problem is studied. Visitors usually judge fit against this section first."
+      },
+      {
+        "title": "Recent Outputs",
+        "desc": "Summarize representative outputs from the past two years: papers at specific venues, granted patents, delivered systems. Avoid padding with raw counts."
+      },
+      {
+        "title": "Recruitment & Collaboration",
+        "desc": "Actively recruiting master's and PhD students as well as undergraduate research interns, and open to joint projects and joint training with industry and institutes."
+      }
+    ],
+    "quick": "Quick Links"
+  }
+}

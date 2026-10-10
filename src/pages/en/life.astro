@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { summarizeText } from '../../utils/seo';
+
+const lifeEntries = await getCollection('life');
+const entry =
+  lifeEntries.find((item) => item.id === 'lab-life_en.md') ||
+  lifeEntries.find((item) => /_en\.md$/i.test(item.id));
+
+if (!entry) {
+  throw new Error('Missing English life content: src/content/life/**/*_en.md');
+}
+
+const { Content } = await render(entry);
+const pageTitle = entry.data.title || 'Lab Life & Equipment';
+const pageDesc = summarizeText(entry.body) || 'Lab environment, major equipment, and group routine.';
+---
+<BaseLayout title={pageTitle} desc={pageDesc} lang="en" pathPrefix="/en">
+  <section class="detail-shell">
+    <article class="card detail-hero" data-reveal>
+      <h1 class="page-title">{pageTitle}</h1>
+    </article>
+
+    <article class="card detail-content news-article" data-reveal>
+      <Content />
+    </article>
+
+    <div class="back-row" data-reveal>
+      <a class="btn btn-primary" href="/en/">Back to Home</a>
+      <a class="btn btn-ghost" href="/en/members/">Members</a>
+      <a class="btn btn-ghost" href="/en/join/">Join Us</a>
+    </div>
+  </section>
+</BaseLayout>

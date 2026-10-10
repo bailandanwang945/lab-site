@@ -1,0 +1,142 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { resolveMemberAvatar } from '../utils/member-avatar';
+import { pickI18nText } from '../utils/i18n-text';
+
+const memberEntries = await getCollection('members');
+const roleOrder = ['负责人 (PI)', '博士生', '硕士生', '研究助理'];
+const roleRank = new Map(roleOrder.map((role, index) => [role, index]));
+const currentStatuses = ['在读', '在职'];
+const formerStatuses = ['已毕业', '已离开'];
+const leadRoleKeywordsZh = ['负责人', '导师', '教授', 'pi'];
+
+function isLeadRoleZh(roleZh: string) {
+  const role = (roleZh || '').toLowerCase();
+  return leadRoleKeywordsZh.some((keyword) => role.includes(keyword));
+}
+
+function getRoleRankZh(roleZh: string) {
+  const exact = roleRank.get(roleZh);
+  if (typeof exact === 'number') {
+    return exact;
+  }
+  const role = (roleZh || '').toLowerCase();
+  if (isLeadRoleZh(roleZh)) {
+    return 0;
+  }
+  if (role.includes('博士')) {
+    return 1;
+  }
+  if (role.includes('硕士')) {
+    return 2;
+  }
+  if (role.includes('研究助理') || role.includes('助理') || role.includes('ra')) {
+    return 3;
+  }
+  return Number.MAX_SAFE_INTEGER;
+}
+
+function resolveStatusGroup(roleZh: string, statusZh: string) {
+  if (isLeadRoleZh(roleZh)) {
+    return 0;
+  }
+  if (currentStatuses.includes(statusZh)) {
+    return 1;
+  }
+  if (formerStatuses.includes(statusZh)) {
+    return 2;
+  }
+  return 1;
+}
+
+function resolveStatusTone(statusZh: string) {
+  if (formerStatuses.includes(statusZh)) {
+    return 'former';
+  }
+  return 'current';
+}
+
+const membersWithId = memberEntries
+  .map((e) => ({
+    ...e.data,
+    id: e.data.id ?? e.slug,
+    nameText: pickI18nText(e.data.name, 'zh'),
+    areaText: pickI18nText(e.data.area, 'zh'),
+    statusText: pickI18nText(e.data.status, 'zh'),
+    avatarResolved: resolveMemberAvatar(e.data),
+  }))
+  .sort((a, b) => {
+    const groupA = resolveStatusGroup(a.role.zh, a.statusText);
+    const groupB = resolveStatusGroup(b.role.zh, b.statusText);
+    if (groupA !== groupB) {
+      return groupA - groupB;
+    }
+    const rankA = getRoleRankZh(a.role.zh);
+    const rankB = getRoleRankZh(b.role.zh);
+    return rankA - rankB || a.nameText.localeCompare(b.nameText);
+  });
+const roleSet = new Set(membersWithId.map((m) => m.role.zh));
+const extraRoles = Array.from(roleSet).filter((role) => !roleOrder.includes(role)).sort();
+const roles = ['全部', ...roleOrder.filter((role) => roleSet.has(role)), ...extraRoles];
+const pageDesc = '查看 DoubleDuckLab 成员列表、研究方向与当前状态。';
+
+---
+<BaseLayout title="成员" desc={pageDesc} lang="zh" pathPrefix="">
+  <section class="page-head" data-reveal>
+    <h1 class="page-title">成员列表</h1>
+  </section>
+
+  <section class="filter-wrap" data-members-filter-root data-reveal>
+    <input
+      class="filter-input"
+      type="search"
+      data-member-search
+      placeholder="搜索 name / area / role..."
+      aria-label="搜索成员"
+    />
+
+    <div class="filter-tags">
+      {roles.map((role, i) => (
+        <button
+          class={`filter-tag ${i === 0 ? 'is-selected' : ''}`}
+          type="button"
+          data-role-filter={i === 0 ? '__all' : role.toLowerCase()}
+        >
+          {role}
+        </button>
+      ))}
+    </div>
+
+    <p class="empty-state" data-empty-state hidden>没有匹配成员，请调整关键词或筛选条件。</p>
+
+    <div class="grid grid-3" data-reveal-group>
+      {membersWithId.map((m, i) => (
+        <a
+          href={`/members/${m.id}/`}
+          class="card card-hover card-link member-card"
+          data-member-card
+          data-name={m.nameText}
+          data-role={m.role.zh}
+          data-area={m.areaText}
+          data-reveal
+          data-reveal-order={String(i)}
+        >
+          {m.statusText && !isLeadRoleZh(m.role.zh) && (
+            <span class={`member-status status-${resolveStatusTone(m.statusText)}`}>{m.statusText}</span>
+          )}
+          <img
+            class="member-avatar"
+            src={m.avatarResolved}
+            alt={`${m.nameText} 头像`}
+            loading="lazy"
+            decoding="async"
+          />
+          <h3>{m.nameText}</h3>
+          <p class="member-role"><span class="badge-muted">{m.role.zh}</span></p>
+          <p class="mt-4">{m.areaText}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
