@@ -1,4 +1,4 @@
-const DEFAULT_SITE_URL = 'https://doubleducklab.com/';
+const DEFAULT_SITE_URL = 'https://mjcui.github.io/lab-site/';
 
 export type LocaleAlternates = {
   zh?: string;
@@ -54,12 +54,24 @@ export function buildDefaultLocaleAlternates(pathname: string): LocaleAlternates
 
 export function toAbsoluteUrl(pathname: string, site: URL | string | undefined) {
   const siteUrl = normalizeSiteUrl(site);
-  return new URL(pathname, siteUrl).toString();
+  return new URL(joinPathWithBase(pathname, siteUrl.pathname), siteUrl.origin).toString();
+}
+
+/**
+ * 站点可能部署在子路径下（如 https://user.github.io/lab-site/）。
+ * URL 以 / 开头的路径会丢弃 base，因此这里需要手动拼接。
+ */
+export function joinPathWithBase(pathname: string, basePathname: string) {
+  const base = (basePathname || '/').replace(/\/+$/, '');
+  const path = (pathname || '/').startsWith('/') ? pathname : `/${pathname}`;
+  const joined = `${base}${path}`;
+  return joined.replace(/\/{2,}/g, '/') || '/';
 }
 
 export function normalizeSiteUrl(site: URL | string | undefined) {
   if (site instanceof URL) {
-    return site;
+    // URL 对象同样可能丢失子路径，这里补回 pathname
+    return new URL(`${site.origin}${joinPathWithBase('/', site.pathname)}`);
   }
 
   const raw = `${site || DEFAULT_SITE_URL}`.trim().replace(/^['"]|['"]$/g, '');
@@ -73,6 +85,10 @@ export function normalizeSiteUrl(site: URL | string | undefined) {
 
     url.search = '';
     url.hash = '';
+    // 保证以 / 结尾，否则 joinPathWithBase 里的 replace 会误判
+    if (!url.pathname.endsWith('/')) {
+      url.pathname = `${url.pathname}/`;
+    }
     return url;
   } catch {
     return new URL(DEFAULT_SITE_URL);

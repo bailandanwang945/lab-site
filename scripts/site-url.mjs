@@ -1,6 +1,6 @@
 import { loadEnv } from 'vite';
 
-export const DEFAULT_SITE_URL = 'https://doubleducklab.com/';
+export const DEFAULT_SITE_URL = 'https://mjcui.github.io/lab-site/';
 
 export function normalizeSiteUrl(value) {
   const raw = `${value || DEFAULT_SITE_URL}`.trim().replace(/^['"]|['"]$/g, '');

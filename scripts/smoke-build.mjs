@@ -1,11 +1,16 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
+import { loadEnv } from 'vite';
 
-const cmsRepo = (process.env.CMS_GITHUB_REPO || '').trim();
-const cmsOauthBaseUrl = (process.env.CMS_OAUTH_BASE_URL || '').trim();
-const publicSiteUrl = (process.env.PUBLIC_SITE_URL || '').trim();
-const cmsBranch = (process.env.CMS_BRANCH || 'main').trim() || 'main';
+// 校验时需要知道 CMS 是否配置完整。Astro 构建会把 .env 注入 import.meta.env，
+// 但本脚本以 Node 直接运行，因此显式加载 .env，避免"明明配了却判定未配置"。
+const localEnv = loadEnv(process.env.MODE || 'production', process.cwd(), '');
+
+const cmsRepo = (process.env.CMS_GITHUB_REPO || localEnv.CMS_GITHUB_REPO || '').trim();
+const cmsOauthBaseUrl = (process.env.CMS_OAUTH_BASE_URL || localEnv.CMS_OAUTH_BASE_URL || '').trim();
+const publicSiteUrl = (process.env.PUBLIC_SITE_URL || localEnv.PUBLIC_SITE_URL || '').trim();
+const cmsBranch = (process.env.CMS_BRANCH || localEnv.CMS_BRANCH || 'main').trim() || 'main';
 
 function normalizeUrl(value) {
   const raw = (value || '').trim().replace(/^['"]|['"]$/g, '');
@@ -86,11 +91,11 @@ const unexpectedMissingCmsVars = ['CMS_GITHUB_REPO', 'CMS_OAUTH_BASE_URL', 'PUBL
 const checks = [
   {
     file: 'dist/index.html',
-    includes: ['DoubleDuckLab', '重点信息', '查看论文'],
+    includes: ['课题组名称占位', '重点信息', '查看论文'],
   },
   {
     file: 'dist/en/index.html',
-    includes: ['DoubleDuckLab', 'Highlights', 'View Papers'],
+    includes: ['Group Name Placeholder', 'Highlights', 'View Papers'],
   },
   {
     file: 'dist/members/index.html',
