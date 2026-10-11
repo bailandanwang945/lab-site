@@ -46,7 +46,7 @@ const BackgroundContent = bgRender?.Content;
 const links = meta.links || {};
 const hasLinks = Boolean(links.repo || links.demo || links.paper);
 const pageDesc =
-  summarizeParts([meta.tag, meta.status, meta.time, overviewEntry.body], 160) || 'Read the overview of this DoubleDuckLab project.';
+  summarizeParts([meta.tag, meta.status, meta.time, overviewEntry.body], 160) || 'Read the overview of this research project.';
 ---
 <BaseLayout title={meta.title} desc={pageDesc} lang="en" pathPrefix="/en" localeAlternates={localeAlternates}>
   <section class="detail-shell">

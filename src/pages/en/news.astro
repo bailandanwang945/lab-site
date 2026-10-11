@@ -6,7 +6,7 @@ import { buildLocalizedNews } from '../../utils/news-localized';
 
 const newsEntries = await getCollection('news');
 const news = buildLocalizedNews(newsEntries).filter((item) => item.entry.en);
-const pageDesc = 'Browse DoubleDuckLab news updates and recent announcements.';
+const pageDesc = 'Browse our lab news updates and recent announcements.';
 ---
 <BaseLayout title="News" desc={pageDesc} lang="en" pathPrefix="/en">
   <section class="page-head" data-reveal>

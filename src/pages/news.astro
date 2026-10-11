@@ -6,7 +6,7 @@ import { buildLocalizedNews } from '../utils/news-localized';
 
 const newsEntries = await getCollection('news');
 const news = buildLocalizedNews(newsEntries).filter((item) => item.entry.zh);
-const pageDesc = '查看 DoubleDuckLab 新闻动态与最近更新。';
+const pageDesc = '查看课题组新闻动态与最近更新。';
 ---
 <BaseLayout title="新闻" desc={pageDesc} lang="zh" pathPrefix="">
   <section class="page-head" data-reveal>

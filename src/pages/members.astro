@@ -80,7 +80,7 @@ const membersWithId = memberEntries
 const roleSet = new Set(membersWithId.map((m) => m.role.zh));
 const extraRoles = Array.from(roleSet).filter((role) => !roleOrder.includes(role)).sort();
 const roles = ['全部', ...roleOrder.filter((role) => roleSet.has(role)), ...extraRoles];
-const pageDesc = '查看 DoubleDuckLab 成员列表、研究方向与当前状态。';
+const pageDesc = '查看课题组成员列表、研究方向与当前状态。';
 
 ---
 <BaseLayout title="成员" desc={pageDesc} lang="zh" pathPrefix="">

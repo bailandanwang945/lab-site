@@ -15,7 +15,7 @@ if (!entry) {
 
 const { Content } = await render(entry);
 const pageTitle = entry.data.title || '招生与合作';
-const pageDesc = summarizeText(entry.body) || '查看 DoubleDuckLab 的招生与合作信息。';
+const pageDesc = summarizeText(entry.body) || '查看课题组的招生与合作信息。';
 ---
 <BaseLayout title={pageTitle} desc={pageDesc} lang="zh" pathPrefix="">
   <section class="detail-shell">

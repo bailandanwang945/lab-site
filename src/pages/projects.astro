@@ -6,7 +6,7 @@ import { buildLocalizedProjects, projectDisplayMeta } from '../utils/projects-lo
 
 const projectEntries = await getCollection('projects');
 const projects = buildLocalizedProjects(projectEntries).filter((item) => item.entry.overview.zh);
-const pageDesc = '查看 DoubleDuckLab 的在研与历史项目列表。';
+const pageDesc = '查看课题组的在研与历史项目列表。';
 
 function resolveProjectStatusTone(status: string) {
   const value = (status || '').toLowerCase();

@@ -6,7 +6,7 @@ import { buildLocalizedProjects, projectDisplayMeta } from '../../utils/projects
 
 const projectEntries = await getCollection('projects');
 const projects = buildLocalizedProjects(projectEntries).filter((item) => item.entry.overview.en);
-const pageDesc = 'Browse ongoing and completed DoubleDuckLab projects.';
+const pageDesc = 'Browse ongoing and completed projects in our lab.';
 
 function resolveProjectStatusTone(status: string) {
   const value = (status || '').toLowerCase();
