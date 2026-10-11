@@ -16,11 +16,13 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version-file: .node-version
-          cache: npm
+          node-version: '22'
+          # 不启用 cache: 'npm'，因为仓库中没有 package-lock.json，
+          # setup-node 会因找不到锁文件而直接失败。
 
       - name: Install dependencies
-        run: npm ci
+        # npm ci 要求存在 package-lock.json，此处改用 npm install
+        run: npm install --no-audit --no-fund
 
       - name: Run full verification
         run: npm run verify

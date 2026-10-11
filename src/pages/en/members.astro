@@ -79,7 +79,7 @@ const membersWithId = memberEntries
 const roleSet = new Set(membersWithId.map((m) => m.role.en));
 const extraRoles = Array.from(roleSet).filter((role) => !roleOrder.includes(role)).sort();
 const roles = ['All', ...roleOrder.filter((role) => roleSet.has(role)), ...extraRoles];
-const pageDesc = 'Browse DoubleDuckLab members, roles, research areas, and current status.';
+const pageDesc = 'Browse our lab members, roles, research areas, and current status.';
 
 ---
 <BaseLayout title="Members" desc={pageDesc} lang="en" pathPrefix="/en">

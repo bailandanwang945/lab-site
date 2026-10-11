@@ -19,6 +19,10 @@ function assertIncludes(html, needle, file) {
 }
 
 const siteUrl = resolveConfiguredSiteUrl(process.env.MODE || 'production');
+// 站内绝对路径在部署到子路径时必须带 base 前缀，断言需与之保持一致
+const base = new URL(siteUrl).pathname.replace(/\/+$/, '');
+const withBase = (p) => `${base}${p}`;
+
 const checks = [
   {
     file: 'dist/index.html',
@@ -27,13 +31,13 @@ const checks = [
       `<link rel="canonical" href="${siteUrl}">`,
       `<link rel="alternate" hreflang="en" href="${siteUrl}en/">`,
       `<meta property="og:url" content="${siteUrl}">`,
-      'href="/en/"',
-      'href="/members/"',
-      'href="/projects/"',
-      'href="/papers/"',
-      'href="/news/"',
-      'href="/life/"',
-      'href="/join/"',
+      `href="${withBase('/en/')}"`,
+      `href="${withBase('/members/')}"`,
+      `href="${withBase('/projects/')}"`,
+      `href="${withBase('/papers/')}"`,
+      `href="${withBase('/news/')}"`,
+      `href="${withBase('/life/')}"`,
+      `href="${withBase('/join/')}"`,
     ],
   },
   {
@@ -43,13 +47,13 @@ const checks = [
       `<link rel="canonical" href="${siteUrl}en/">`,
       `<link rel="alternate" hreflang="zh-CN" href="${siteUrl}">`,
       `<meta property="og:url" content="${siteUrl}en/">`,
-      'href="/"',
-      'href="/en/members/"',
-      'href="/en/projects/"',
-      'href="/en/papers/"',
-      'href="/en/news/"',
-      'href="/en/life/"',
-      'href="/en/join/"',
+      `href="${withBase('/')}"`,
+      `href="${withBase('/en/members/')}"`,
+      `href="${withBase('/en/projects/')}"`,
+      `href="${withBase('/en/papers/')}"`,
+      `href="${withBase('/en/news/')}"`,
+      `href="${withBase('/en/life/')}"`,
+      `href="${withBase('/en/join/')}"`,
     ],
   },
   {
@@ -57,7 +61,7 @@ const checks = [
     includes: [
       `<link rel="canonical" href="${siteUrl}projects/project-1/">`,
       `<link rel="alternate" hreflang="en" href="${siteUrl}en/projects/project-1/">`,
-      'href="/en/projects/project-1/"',
+      `href="${withBase('/en/projects/project-1/')}"`,
     ],
   },
   {
@@ -65,7 +69,7 @@ const checks = [
     includes: [
       `<link rel="canonical" href="${siteUrl}life/">`,
       `<link rel="alternate" hreflang="en" href="${siteUrl}en/life/">`,
-      'href="/en/life/"',
+      `href="${withBase('/en/life/')}"`,
     ],
   },
   {
@@ -73,7 +77,7 @@ const checks = [
     includes: [
       `<link rel="canonical" href="${siteUrl}join/">`,
       `<link rel="alternate" hreflang="en" href="${siteUrl}en/join/">`,
-      'href="/en/join/"',
+      `href="${withBase('/en/join/')}"`,
     ],
   },
   {
@@ -82,7 +86,7 @@ const checks = [
       `<link rel="canonical" href="${siteUrl}en/news/2026-10-10-group-site-launch/">`,
       `<link rel="alternate" hreflang="zh-CN" href="${siteUrl}news/2026-10-10-group-site-launch/">`,
       '<meta property="og:type" content="article">',
-      'href="/news/2026-10-10-group-site-launch/"',
+      `href="${withBase('/news/2026-10-10-group-site-launch/')}"`,
     ],
   },
   {

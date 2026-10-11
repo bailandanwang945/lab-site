@@ -1,4 +1,5 @@
 ---
+import { b } from '../../../utils/seo';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
 import { buildLocalizedProjects, projectDisplayMeta } from '../../../utils/projects-localized';
@@ -85,8 +86,8 @@ const pageDesc =
     )}
 
     <div class="back-row" data-reveal>
-      <a class="btn btn-primary" href="/en/projects/" data-history-back>Back to Projects</a>
-      <a class="btn btn-ghost" href="/en/">Back to Home</a>
+      <a class="btn btn-primary" href={b('/en/projects/')} data-history-back>Back to Projects</a>
+      <a class="btn btn-ghost" href={b('/en/')}>Back to Home</a>
     </div>
   </section>
 </BaseLayout>

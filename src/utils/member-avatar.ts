@@ -1,7 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const DEFAULT_AVATAR = '/images/avatar-default.png';
+import { asset } from './seo';
+
+const DEFAULT_AVATAR = () => asset('/images/avatar-default.png');
 const AVATAR_EXTS = ['png', 'jpg', 'svg'] as const;
 
 type MemberLike = {
@@ -22,17 +24,17 @@ export function resolveMemberAvatar(member: MemberLike): string {
   );
 
   if (!candidateNames.length) {
-    return DEFAULT_AVATAR;
+    return DEFAULT_AVATAR();
   }
 
   for (const candidate of candidateNames) {
     for (const ext of AVATAR_EXTS) {
       const diskPath = path.join(process.cwd(), 'public', 'member', 'images', `${candidate}.${ext}`);
       if (fs.existsSync(diskPath)) {
-        return encodeURI(`/member/images/${candidate}.${ext}`);
+        return encodeURI(asset(`/member/images/${candidate}.${ext}`));
       }
     }
   }
 
-  return DEFAULT_AVATAR;
+  return DEFAULT_AVATAR();
 }

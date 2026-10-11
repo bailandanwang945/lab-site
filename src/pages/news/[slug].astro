@@ -1,4 +1,5 @@
 ---
+import { b } from '../../utils/seo';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
 import { buildLocalizedNews } from '../../utils/news-localized';
@@ -60,8 +61,8 @@ const pageDesc = summarizeParts([date, entry.body], 160) || `${title}${date ? ` 
     </article>
 
     <div class="back-row" data-reveal>
-      <a class="btn btn-primary" href="/news/" data-history-back>返回新闻列表</a>
-      <a class="btn btn-ghost" href="/">回到首页</a>
+      <a class="btn btn-primary" href={b('/news/')} data-history-back>返回新闻列表</a>
+      <a class="btn btn-ghost" href={b('/')}>回到首页</a>
     </div>
   </section>
 </BaseLayout>

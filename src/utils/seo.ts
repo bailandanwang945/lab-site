@@ -68,6 +68,73 @@ export function joinPathWithBase(pathname: string, basePathname: string) {
   return joined.replace(/\/{2,}/g, '/') || '/';
 }
 
+/**
+ * 去掉 base 前缀，得到「站内逻辑路径」。
+ * Astro 在设置 base 后，Astro.url.pathname 会带上 /lab-site，
+ * 而站内链接与路径比较都应基于不含 base 的路径。
+ */
+export function stripBasePath(pathname: string, base: string) {
+  const normalizedBase = (base || '/').replace(/\/+$/, '');
+  const path = (pathname || '/').startsWith('/') ? pathname : `/${pathname}`;
+
+  if (normalizedBase && (path === normalizedBase || path.startsWith(`${normalizedBase}/`))) {
+    const stripped = path.slice(normalizedBase.length);
+    return stripped === '' ? '/' : stripped;
+  }
+
+  return path;
+}
+
+/** 给站内逻辑路径补上 base，用于生成实际可访问的 href。 */
+export function withBasePath(pathname: string, base: string) {
+  return normalizeSitePath(joinPathWithBase(pathname, base || '/'));
+}
+
+/**
+ * 站内链接助手（可在任意 .astro 的 frontmatter 里直接用）。
+ *
+ * 站点部署在子路径（如 https://user.github.io/lab-site/）时，
+ * 模板里写死的 '/members/' 这类绝对路径不会自动补 base，
+ * 会指向域名根目录。统一改用 b('/members/') 即可。
+ *
+ * base 优先取 import.meta.env.BASE_URL（由 astro.config 的 base 提供）；
+ * 若取不到则回退到 PUBLIC_SITE_URL 的 pathname 自行推导。
+ */
+function resolveBase(): string {
+  const fromAstro = import.meta.env?.BASE_URL;
+  if (fromAstro && fromAstro !== '/') {
+    return fromAstro.replace(/\/$/, '');
+  }
+
+  const site = import.meta.env?.PUBLIC_SITE_URL || import.meta.env?.SITE_URL;
+  if (site) {
+    try {
+      const { pathname } = new URL(site);
+      return pathname.replace(/\/+$/, '');
+    } catch {
+      /* 非法 URL，忽略 */
+    }
+  }
+
+  return '';
+}
+
+export const BASE = resolveBase();
+
+export function b(pathname: string) {
+  return normalizeSitePath(joinPathWithBase(pathname || '/', BASE || '/'));
+}
+
+/**
+ * 静态资源路径（图片、字体等）。
+ * 与 b() 的区别：不补尾斜杠，否则服务器会按目录解析导致 404。
+ */
+export function asset(pathname: string) {
+  const base = BASE || '';
+  const path = pathname.startsWith('/') ? pathname : `/${pathname}`;
+  return `${base}${path}`.replace(/([^:])\/{2,}/g, '$1/');
+}
+
 export function normalizeSiteUrl(site: URL | string | undefined) {
   if (site instanceof URL) {
     // URL 对象同样可能丢失子路径，这里补回 pathname

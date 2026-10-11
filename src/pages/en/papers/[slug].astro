@@ -1,4 +1,5 @@
 ---
+import { b } from '../../../utils/seo';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
 import { summarizeParts } from '../../../utils/seo';
@@ -76,8 +77,8 @@ const pageDesc = abstract || summarizeParts([entry.data.authors, entry.data.venu
     )}
 
     <div class="back-row" data-reveal>
-      <a class="btn btn-primary" href="/en/papers/" data-history-back>Back to Papers</a>
-      <a class="btn btn-ghost" href="/en/">Back to Home</a>
+      <a class="btn btn-primary" href={b('/en/papers/')} data-history-back>Back to Papers</a>
+      <a class="btn btn-ghost" href={b('/en/')}>Back to Home</a>
     </div>
   </section>
 </BaseLayout>

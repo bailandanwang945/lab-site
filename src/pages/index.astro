@@ -1,4 +1,5 @@
 ---
+import { b } from '../utils/seo';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import siteZh from '../data/site.zh.json';
 import { getCollection } from 'astro:content';
@@ -37,10 +38,10 @@ function formatPreviewTimeRange(value: string) {
     <h1 class="hero-title" data-reveal data-reveal-delay="70">{t.siteName}</h1>
     <p class="hero-subtitle" data-reveal data-reveal-delay="120">{t.home.intro}</p>
     <div class="hero-actions" data-reveal data-reveal-delay="180">
-      <a class="btn btn-primary" href="/papers/">查看论文</a>
-      <a class="btn btn-ghost" href="/projects/">查看项目</a>
-      <a class="btn btn-ghost" href="/members/">了解成员</a>
-      <a class="btn btn-ghost" href="/join/">招生合作</a>
+      <a class="btn btn-primary" href={b('/papers/')}>查看论文</a>
+      <a class="btn btn-ghost" href={b('/projects/')}>查看项目</a>
+      <a class="btn btn-ghost" href={b('/members/')}>了解成员</a>
+      <a class="btn btn-ghost" href={b('/join/')}>招生合作</a>
     </div>
   </section>
 
@@ -83,12 +84,12 @@ function formatPreviewTimeRange(value: string) {
   <section class="card" data-reveal>
     <h2>{t.home.quick}</h2>
     <ul class="quick-links">
-      <li><a href="/members/">成员列表</a></li>
-      <li><a href="/projects/">项目展示</a></li>
-      <li><a href="/papers/">论文列表</a></li>
-      <li><a href="/news/">新闻动态</a></li>
-      <li><a href="/life/">实验室与设备</a></li>
-      <li><a href="/join/">招生与合作</a></li>
+      <li><a href={b('/members/')}>成员列表</a></li>
+      <li><a href={b('/projects/')}>项目展示</a></li>
+      <li><a href={b('/papers/')}>论文列表</a></li>
+      <li><a href={b('/news/')}>新闻动态</a></li>
+      <li><a href={b('/life/')}>实验室与设备</a></li>
+      <li><a href={b('/join/')}>招生与合作</a></li>
     </ul>
   </section>
 </BaseLayout>

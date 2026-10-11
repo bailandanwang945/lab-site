@@ -2,7 +2,7 @@
 import siteZh from '../data/site.zh.json';
 import siteEn from '../data/site.en.json';
 import { ClientRouter } from 'astro:transitions';
-import { buildDefaultLocaleAlternates, normalizeSitePath, toAbsoluteUrl } from '../utils/seo';
+import { b, BASE, buildDefaultLocaleAlternates, normalizeSitePath, stripBasePath, toAbsoluteUrl, withBasePath } from '../utils/seo';
 import type { LocaleAlternates } from '../utils/seo';
 
 import '../styles/tokens.css';
@@ -41,7 +41,9 @@ const {
 
 const t = lang === 'en' ? siteEn : siteZh;
 const description = desc || t.home.intro;
-const currentPath = normalizeSitePath(Astro.url.pathname);
+// base 形如 /lab-site；Astro.url.pathname 已包含 base，比较前需先剥离
+const base = BASE || '/';
+const currentPath = normalizeSitePath(stripBasePath(Astro.url.pathname, base));
 const hasExplicitLocaleAlternates = Object.prototype.hasOwnProperty.call(Astro.props, 'localeAlternates');
 const resolvedLocaleAlternates = hasExplicitLocaleAlternates ? localeAlternates ?? {} : buildDefaultLocaleAlternates(currentPath);
 const zhPath = resolvedLocaleAlternates.zh ? normalizeSitePath(resolvedLocaleAlternates.zh) : undefined;
@@ -53,7 +55,9 @@ const canonicalPath = lang === 'en' ? enPath || currentPath : zhPath || currentP
 const siteUrl = import.meta.env.PUBLIC_SITE_URL || import.meta.env.SITE_URL || Astro.site;
 const canonicalUrl = toAbsoluteUrl(canonicalPath, siteUrl);
 const ogImageUrl = toAbsoluteUrl(ogImage, siteUrl);
-const localeSwitchHref = disableLocaleAlternates ? undefined : lang === 'zh' ? enPath : zhPath;
+const localeSwitchHref = disableLocaleAlternates || !(enPath || zhPath)
+  ? undefined
+  : withBasePath((lang === 'zh' ? enPath : zhPath) as string, base);
 const hasAlternateLocale = Boolean(localeSwitchHref);
 const localeLabel = lang === 'zh' ? '中文' : 'English';
 const alternateLocaleLabel = lang === 'zh' ? 'English' : '中文';
@@ -69,6 +73,16 @@ const navPath = {
   life: `${pathPrefix}/life`,
 };
 const navPathResolved = {
+  home: withBasePath(navPath.home, base),
+  members: withBasePath(navPath.members, base),
+  projects: withBasePath(navPath.projects, base),
+  papers: withBasePath(navPath.papers, base),
+  news: withBasePath(navPath.news, base),
+  join: withBasePath(navPath.join, base),
+  life: withBasePath(navPath.life, base),
+};
+// 用于「当前页高亮」比较的逻辑路径（不含 base）
+const navPathCompare = {
   home: normalizeSitePath(navPath.home),
   members: normalizeSitePath(navPath.members),
   projects: normalizeSitePath(navPath.projects),
@@ -104,9 +118,9 @@ const navPathResolved = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
     <ClientRouter />
-    <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="icon" type="image/png" href="/images/DDLab_logo.png" />
-    <link rel="apple-touch-icon" href="/images/DDLab_logo.png" />
+    <link rel="preload" href={`${base}fonts/inter-var.woff2`} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" type="image/png" href={`${base}images/DDLab_logo.png`} />
+    <link rel="apple-touch-icon" href={`${base}images/DDLab_logo.png`} />
     <script is:inline>
       (() => {
         const saved = localStorage.getItem('lab-theme');
@@ -131,13 +145,13 @@ const navPathResolved = {
       <div class="container nav">
         <div class="brand">{t.brand}</div>
         <nav class="nav-links">
-          <a class={`nav-link ${currentPath === navPathResolved.home ? 'is-active' : ''}`} href={navPathResolved.home}>{t.nav.home}</a>
-          <a class={`nav-link ${currentPath.startsWith(navPathResolved.members) ? 'is-active' : ''}`} href={navPathResolved.members}>{t.nav.members}</a>
-          <a class={`nav-link ${currentPath.startsWith(navPathResolved.projects) ? 'is-active' : ''}`} href={navPathResolved.projects}>{t.nav.projects}</a>
-          <a class={`nav-link ${currentPath.startsWith(navPathResolved.papers) ? 'is-active' : ''}`} href={navPathResolved.papers}>{t.nav.papers}</a>
-          <a class={`nav-link ${currentPath.startsWith(navPathResolved.news) ? 'is-active' : ''}`} href={navPathResolved.news}>{t.nav.news}</a>
-          <a class={`nav-link ${currentPath.startsWith(navPathResolved.life) ? 'is-active' : ''}`} href={navPathResolved.life}>{t.nav.life}</a>
-          <a class={`nav-link nav-link-cta ${currentPath.startsWith(navPathResolved.join) ? 'is-active' : ''}`} href={navPathResolved.join}>{t.nav.join}</a>
+          <a class={`nav-link ${currentPath === navPathCompare.home ? 'is-active' : ''}`} href={navPathResolved.home}>{t.nav.home}</a>
+          <a class={`nav-link ${currentPath.startsWith(navPathCompare.members) ? 'is-active' : ''}`} href={navPathResolved.members}>{t.nav.members}</a>
+          <a class={`nav-link ${currentPath.startsWith(navPathCompare.projects) ? 'is-active' : ''}`} href={navPathResolved.projects}>{t.nav.projects}</a>
+          <a class={`nav-link ${currentPath.startsWith(navPathCompare.papers) ? 'is-active' : ''}`} href={navPathResolved.papers}>{t.nav.papers}</a>
+          <a class={`nav-link ${currentPath.startsWith(navPathCompare.news) ? 'is-active' : ''}`} href={navPathResolved.news}>{t.nav.news}</a>
+          <a class={`nav-link ${currentPath.startsWith(navPathCompare.life) ? 'is-active' : ''}`} href={navPathResolved.life}>{t.nav.life}</a>
+          <a class={`nav-link nav-link-cta ${currentPath.startsWith(navPathCompare.join) ? 'is-active' : ''}`} href={navPathResolved.join}>{t.nav.join}</a>
         </nav>
         <div class="nav-actions">
           <button class="btn btn-ghost" data-theme-toggle type="button" aria-label="Switch theme">Dark</button>
@@ -175,7 +189,7 @@ const navPathResolved = {
         </span>
         <span>© 2026 {t.siteName}</span>
         <span>
-          <a href="https://github.com/nightt5879/doubleducklab" target="_blank" rel="noreferrer">
+          <a href="https://github.com/mjcui/lab-site" target="_blank" rel="noreferrer">
             GitHub
           </a>
         </span>

@@ -1,4 +1,5 @@
 ---
+import { b } from '../../utils/seo';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import siteEn from '../../data/site.en.json';
 import { getCollection } from 'astro:content';
@@ -37,10 +38,10 @@ function formatPreviewTimeRange(value: string) {
     <h1 class="hero-title" data-reveal data-reveal-delay="70">{t.siteName}</h1>
     <p class="hero-subtitle" data-reveal data-reveal-delay="120">{t.home.intro}</p>
     <div class="hero-actions" data-reveal data-reveal-delay="180">
-      <a class="btn btn-primary" href="/en/papers/">View Papers</a>
-      <a class="btn btn-ghost" href="/en/projects/">Explore Projects</a>
-      <a class="btn btn-ghost" href="/en/members/">Meet Members</a>
-      <a class="btn btn-ghost" href="/en/join/">Join Us</a>
+      <a class="btn btn-primary" href={b('/en/papers/')}>View Papers</a>
+      <a class="btn btn-ghost" href={b('/en/projects/')}>Explore Projects</a>
+      <a class="btn btn-ghost" href={b('/en/members/')}>Meet Members</a>
+      <a class="btn btn-ghost" href={b('/en/join/')}>Join Us</a>
     </div>
   </section>
 
@@ -83,12 +84,12 @@ function formatPreviewTimeRange(value: string) {
   <section class="card" data-reveal>
     <h2>{t.home.quick}</h2>
     <ul class="quick-links">
-      <li><a href="/en/members/">Members</a></li>
-      <li><a href="/en/projects/">Projects</a></li>
-      <li><a href="/en/papers/">Publications</a></li>
-      <li><a href="/en/news/">News</a></li>
-      <li><a href="/en/life/">Lab &amp; Equipment</a></li>
-      <li><a href="/en/join/">Recruitment</a></li>
+      <li><a href={b('/en/members/')}>Members</a></li>
+      <li><a href={b('/en/projects/')}>Projects</a></li>
+      <li><a href={b('/en/papers/')}>Publications</a></li>
+      <li><a href={b('/en/news/')}>News</a></li>
+      <li><a href={b('/en/life/')}>Lab &amp; Equipment</a></li>
+      <li><a href={b('/en/join/')}>Recruitment</a></li>
     </ul>
   </section>
 </BaseLayout>

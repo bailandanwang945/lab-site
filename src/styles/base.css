@@ -1,6 +1,7 @@
 @font-face {
   font-family: 'Inter';
-  src: url('/fonts/inter-var.woff2') format('woff2');
+  /* 相对路径：CSS 产物位于 /lab-site/_astro/，相对引用可适配任意部署路径 */
+  src: url('../fonts/inter-var.woff2') format('woff2');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
