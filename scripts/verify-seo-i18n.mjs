@@ -101,8 +101,47 @@ try {
     includes.forEach((needle) => assertIncludes(html, needle, file));
   });
 
+  assertNoMissingBasePrefix();
+
   console.log('SEO / i18n checks passed');
 } catch (error) {
   console.error(`SEO / i18n checks failed: ${error.message}`);
   process.exit(1);
+}
+
+/**
+ * 兜底断言：dist 中不得残留任何未带 base 前缀的站内绝对路径。
+ *
+ * 这类漏项会让浏览器把请求打到域名根目录，表现为「样式丢失、页面白板」，
+ * 但直接访问带路径的URL 又能打开，极难察觉，因此单独设一道校验。
+ */
+function assertNoMissingBasePrefix() {
+  if (!base) return;
+
+  const distDir = path.resolve('dist');
+  const offenders = [];
+  const pattern = new RegExp(`\\b(?:href|src|poster|data-src)="(?!${base}/)(/[^"]*)"`, 'g');
+
+  function walk(dir) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walk(full);
+      } else if (entry.name.endsWith('.html') || entry.name.endsWith('.css')) {
+        const content = fs.readFileSync(full, 'utf8');
+        for (const match of content.matchAll(pattern)) {
+          offenders.push(`${path.relative(distDir, full)}: ${match[0]}`);
+        }
+      }
+    }
+  }
+
+  walk(distDir);
+
+  if (offenders.length) {
+    const sample = offenders.slice(0, 5).join('\n    ');
+    throw new Error(
+      `${offenders.length} 处站内路径缺少 base 前缀 "${base}"，浏览器会请求到域名根目录：\n    ${sample}`
+    );
+  }
 }

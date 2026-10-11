@@ -1,4 +1,5 @@
 ---
+import { b } from '../../utils/seo';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { buildLocalizedNews } from '../../utils/news-localized';
@@ -25,7 +26,7 @@ const pageDesc = 'Browse DoubleDuckLab news updates and recent announcements.';
   <div class="grid" data-list-intro>
     {news.map((n, i) => (
       <a
-        href={`/en/news/${n.slug}/`}
+        href={b(`/en/news/${n.slug}/`)}
         class="card card-hover card-link stack-sm"
         data-list-intro-item
         {...(i < 8 ? { 'data-list-intro-active': true } : {})}

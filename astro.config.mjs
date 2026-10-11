@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
   return {
     site,
     // GitHub Pages 项目仓库部署在子路径下（/<repo>/），
-    // 必须设置 base，否则站内链接会指向域名根目录。
+    // 必须设置 base，否则站内链接与静态资源都会指向域名根目录。
     // 从站点地址的 pathname 自动推导，避免手工维护两处。
     base,
     trailingSlash: 'always',

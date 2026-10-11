@@ -1,4 +1,5 @@
 ---
+import { b } from '../utils/seo';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { buildLocalizedProjects, projectDisplayMeta } from '../utils/projects-localized';
@@ -48,7 +49,7 @@ function formatPreviewTimeRange(value: string) {
         const meta = projectDisplayMeta(item, 'zh');
         return (
           <a
-            href={`/projects/${item.slug}/`}
+            href={b(`/projects/${item.slug}/`)}
             class="card card-hover card-link stack-sm"
             data-list-intro-item
             {...(i < 32 ? { 'data-list-intro-active': true } : {})}

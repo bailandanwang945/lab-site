@@ -30,4 +30,20 @@ if (result.signal) {
   process.exit(1);
 }
 
-process.exit(result.status ?? 1);
+if (result.status !== 0) {
+  process.exit(result.status ?? 1);
+}
+
+// 构建后补base 前缀（Astro 的 base 不处理打包产物的静态资源引用）
+const postbuild = spawnSync(process.execPath, [path.resolve('scripts/postbuild-base-prefix.mjs')], {
+  stdio: 'inherit',
+  env: process.env,
+  shell: false,
+});
+
+if (postbuild.status !== 0) {
+  console.error('[build] postbuild 步骤失败');
+  process.exit(postbuild.status ?? 1);
+}
+
+process.exit(0);

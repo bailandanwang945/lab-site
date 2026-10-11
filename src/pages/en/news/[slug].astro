@@ -55,7 +55,7 @@ const pageDesc = summarizeParts([date, entry.body], 160) || `${title}${date ? ` 
       <h2>More News</h2>
       <ul class="detail-list">
         {related.map((n) => (
-          <li><a href={`/en/news/${n.slug}/`}>{n.title}</a> · {n.date}</li>
+          <li><a href={b(`/en/news/${n.slug}/`)}>{n.title}</a> · {n.date}</li>
         ))}
       </ul>
     </article>

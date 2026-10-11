@@ -1,4 +1,5 @@
 ---
+import { b } from '../../utils/seo';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
@@ -26,7 +27,7 @@ const pageDesc = 'Browse DoubleDuckLab papers and publication metadata.';
     <div class="grid project-grid" data-list-intro>
       {papers.map((p, i) => (
         <a
-          href={`/en/papers/${p.slug}/`}
+          href={b(`/en/papers/${p.slug}/`)}
           class="card card-hover card-link stack-sm"
           data-list-intro-item
           {...(i < 8 ? { 'data-list-intro-active': true } : {})}

@@ -1,4 +1,5 @@
 ---
+import { b } from '../../utils/seo';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { resolveMemberAvatar } from '../../utils/member-avatar';
@@ -113,7 +114,7 @@ const pageDesc = 'Browse our lab members, roles, research areas, and current sta
     <div class="grid grid-3" data-reveal-group>
       {membersWithId.map((m, i) => (
         <a
-          href={`/en/members/${m.id}/`}
+          href={b(`/en/members/${m.id}/`)}
           class="card card-hover card-link member-card"
           data-member-card
           data-name={m.nameText}
