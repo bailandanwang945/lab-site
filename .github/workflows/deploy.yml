@@ -35,9 +35,9 @@ jobs:
 
       - name: Build site
         env:
-          # 仓库变量 PUBLIC_SITE_URL（Settings → Secrets and variables → Actions → Variables）
-          # 若未设置，则回退到仓库名推导的默认 Pages 地址
-          PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+          # 直接写死站点地址，不依赖仓库变量（变量页面需要管理员权限才能访问）
+          # 若将来换域名，只需改这一行
+          PUBLIC_SITE_URL: https://mjcui.github.io/lab-site/
         run: npm run build
 
       - name: Upload Pages artifact
