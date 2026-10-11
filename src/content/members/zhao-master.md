@@ -13,6 +13,3 @@ area:
   zh: "研究方向占位四"
   en: "Research Topic D"
 ---
-<!--
-【待替换内容】同 zhang-phd.md。
--->

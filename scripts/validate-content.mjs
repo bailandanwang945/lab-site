@@ -28,7 +28,14 @@ function parseMarkdown(filePath, requireFrontmatter = true) {
   const matched = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
 
   if (!matched) {
-    assert(!requireFrontmatter, `Missing frontmatter: ${filePath}`);
+    if (requireFrontmatter) {
+      // 常见误操作：分隔线上带尾随空格（编辑器自动加），
+      // 正则要求 --- 后紧跟换行，这种情况会静默失败很难排查。
+      if (/^---[ \t]+\r?\n/.test(raw)) {
+        assert(false, `Frontmatter delimiter has trailing whitespace: ${filePath}\n  第一行的 "---" 后面有空格或Tab，删掉即可。`);
+      }
+      assert(false, `Missing frontmatter: ${filePath}`);
+    }
     return { frontmatter: '', body: raw.trim() };
   }
 

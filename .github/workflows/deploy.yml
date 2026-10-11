@@ -40,6 +40,8 @@ jobs:
           # 直接写死站点地址，不依赖仓库变量（变量页面需要管理员权限才能访问）
           # 若将来换域名，只需改这一行
           PUBLIC_SITE_URL: https://mjcui.github.io/lab-site/
+          CMS_GITHUB_REPO: mjcui/lab-site
+          CMS_BRANCH: main
         run: npm run build
 
       - name: Upload Pages artifact

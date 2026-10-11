@@ -28,7 +28,7 @@ We welcome collaboration with industry and research institutions on joint projec
 
 ## Contact
 
-- **Email**: cmjdw@qq.com
+- **Email**: mjcui@tju.edu.cn
 - **Address**: to be added (campus / building / room number)
 - **Office hours**: to be added
 
