@@ -91,11 +91,11 @@ const unexpectedMissingCmsVars = ['CMS_GITHUB_REPO', 'CMS_OAUTH_BASE_URL', 'PUBL
 const checks = [
   {
     file: 'dist/index.html',
-    includes: ['课题组名称占位', '重点信息', '查看论文'],
+    includes: ['崔明建课题组', '重点信息', '查看论文'],
   },
   {
     file: 'dist/en/index.html',
-    includes: ['Group Name Placeholder', 'Highlights', 'View Papers'],
+    includes: ["Cui Mingjian's Lab", 'Highlights', 'View Papers'],
   },
   {
     file: 'dist/members/index.html',
