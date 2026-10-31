@@ -4,8 +4,8 @@ name:
   zh: "崔明建"
   en: "Cui Mingjian"
 role:
-  zh: "负责人 (PI)"
-  en: "PI"
+  zh: "教授、博士生导师"
+  en: "Professor, Doctoral Supervisor"
 area:
   zh: "新能源预测 · 电力系统优化运行 · 网络安全 · 人工智能"
   en: "Renewable Forecasting · Power System Operation · Cyber Security · AI"
