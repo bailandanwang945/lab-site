@@ -957,3 +957,128 @@ html {
     flex-direction: column;
   }
 }
+
+/* ===== 论文页：年代时间轴 ===== */
+.page-sub {
+  color: var(--text-soft);
+  font-size: var(--text-sm);
+  margin-top: 6px;
+}
+
+.papers-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-top: 12px;
+}
+
+.paper-year-group {
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: 22px;
+}
+
+.paper-year-rail {
+  position: relative;
+}
+
+.paper-year-num {
+  display: block;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--primary);
+  letter-spacing: 0.02em;
+  position: sticky;
+  top: 88px;
+}
+
+.paper-year-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-left: 2px solid var(--line);
+  padding-left: 22px;
+}
+
+.paper-row {
+  display: block;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-1);
+  padding: 14px 16px;
+}
+
+.paper-row.is-top {
+  border-left: 3px solid var(--accent-gold);
+}
+
+.paper-row::before {
+  content: '';
+  position: absolute;
+  left: -29px;
+  top: 22px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 2px solid var(--bg-elevated);
+}
+
+.paper-row-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.venue-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.v-ieee {
+  background: rgba(31, 111, 184, 0.12);
+  color: var(--primary);
+}
+
+.v-applied {
+  background: rgba(28, 140, 90, 0.14);
+  color: #1c8c5a;
+}
+
+.v-cn {
+  background: rgba(224, 169, 46, 0.16);
+  color: var(--accent-gold-ink);
+}
+
+.paper-link-ico {
+  font-size: 13px;
+  color: var(--text-soft);
+  line-height: 1;
+}
+
+.paper-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.45;
+  margin: 0 0 6px;
+}
+
+.paper-meta {
+  font-size: 13px;
+  color: var(--text-soft);
+  line-height: 1.5;
+  margin: 0;
+}
+
+[data-list-group].is-filter-hidden {
+  display: none;
+}

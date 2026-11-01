@@ -231,6 +231,14 @@ function initListSearch() {
         }
       });
 
+      const groups = Array.from(root.querySelectorAll('[data-list-group]'));
+      groups.forEach((g) => {
+        const anyVisible = Array.from(g.querySelectorAll('[data-list-card]')).some(
+          (c) => !c.classList.contains('is-filter-hidden'),
+        );
+        g.classList.toggle('is-filter-hidden', !anyVisible);
+      });
+
       if (emptyState) {
         emptyState.hidden = visibleCount !== 0;
       }

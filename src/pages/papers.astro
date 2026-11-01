@@ -2,16 +2,22 @@
 import { b } from '../utils/seo';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { venueMeta } from '../utils/paper-venue';
 
 const paperEntries = await getCollection('papers');
 const papers = paperEntries
   .map((e) => ({ slug: e.slug, ...e.data }))
   .sort((a, b) => b.year - a.year || a.title.localeCompare(b.title));
+
+const years = [...new Set(papers.map((p) => p.year))].sort((a, c) => c - a);
+const papersByYear = Object.fromEntries(years.map((y) => [y, papers.filter((p) => p.year === y)]));
+
 const pageDesc = '查看课题组论文列表与发表信息。';
 ---
 <BaseLayout title="论文" desc={pageDesc} lang="zh" pathPrefix="">
   <section class="page-head" data-reveal>
     <h1 class="page-title">论文</h1>
+    <p class="page-sub">{papers.length} 篇代表性论文 · {years.length} 个年份</p>
   </section>
 
   <section class="filter-wrap" data-list-filter-root data-reveal>
@@ -19,25 +25,39 @@ const pageDesc = '查看课题组论文列表与发表信息。';
       class="filter-input"
       type="search"
       data-list-search
-      placeholder="搜索标题 / 作者 / 会议 / 年份..."
+      placeholder="搜索标题 / 作者 / 期刊 / 年份..."
       aria-label="搜索论文"
     />
     <p class="empty-state" data-empty-state hidden>没有匹配论文，请调整关键词。</p>
 
-    <div class="grid project-grid" data-list-intro>
-      {papers.map((p, i) => (
-        <a
-          href={b(`/papers/${p.slug}/`)}
-          class="card card-hover card-link stack-sm"
-          data-list-intro-item
-          {...(i < 8 ? { 'data-list-intro-active': true } : {})}
-          data-list-card
-          data-search-text={`${p.title} ${p.authors || ''} ${p.venue} ${p.year}`}
-        >
-          <h3>{p.title}</h3>
-          <p>{p.year} · {p.venue}</p>
-          {p.authors && <p class="paper-authors">作者：{p.authors}</p>}
-        </a>
+    <div class="papers-timeline">
+      {years.map((year) => (
+        <div class="paper-year-group" data-list-group>
+          <div class="paper-year-rail">
+            <span class="paper-year-num">{year}</span>
+          </div>
+          <div class="paper-year-items">
+            {papersByYear[year].map((p) => {
+              const m = venueMeta(p.venue, 'zh');
+              const hasLink = Boolean(p.links?.online || p.links?.pdf);
+              return (
+                <a
+                  href={b(`/papers/${p.slug}/`)}
+                  class={`paper-row card-hover${m.top ? ' is-top' : ''}`}
+                  data-list-card
+                  data-search-text={`${p.title} ${p.authors || ''} ${p.venue} ${p.year}`}
+                >
+                  <div class="paper-row-head">
+                    <span class={`venue-tag ${m.cls}`}>{m.tag}</span>
+                    {hasLink && <span class="paper-link-ico" aria-hidden="true">↗</span>}
+                  </div>
+                  <h3 class="paper-title">{p.title}</h3>
+                  <p class="paper-meta">{p.venue}{p.authors ? ` · ${p.authors}` : ''}</p>
+                </a>
+              );
+            })}
+          </div>
+        </div>
       ))}
     </div>
   </section>
