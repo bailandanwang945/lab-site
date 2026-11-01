@@ -25,7 +25,7 @@ The group welcomes applications from **master's** and **PhD students** across di
 ## Collaboration
 
 - We welcome **industry collaboration, technology development, and joint training** with enterprises and research institutes.
-- The group is affiliated with Tianjin University's National Energy Storage Technology Innovation Platform for Industry-Education Integration, and actively pursues international collaboration with leading overseas universities and research institutions, emphasizing multidisciplinary convergence.
+- The group actively pursues international collaboration with leading overseas universities and research institutions, emphasizing multidisciplinary convergence.
 
 ## Contact
 

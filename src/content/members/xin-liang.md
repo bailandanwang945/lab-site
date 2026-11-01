@@ -1,8 +1,8 @@
 ---
 id: "xin-liang"
 name:
-  zh: "鑫亮"
-  en: "Xin Liang"
+  zh: "龙鑫亮"
+  en: "Long Xinliang"
 role:
   zh: "博士生"
   en: "PhD Student"

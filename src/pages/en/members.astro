@@ -73,8 +73,8 @@ const membersWithId = memberEntries
 
 const groupDefsEn = [
   { key: 'Professor, Doctoral Supervisor', title: 'Faculty' },
-  { key: 'PhD', title: 'PhD Students' },
-  { key: 'Master', title: 'Master Students' },
+  { key: 'PhD Student', title: 'PhD Students' },
+  { key: 'Master Student', title: 'Master Students' },
 ];
 const memberGroups = groupDefsEn
   .filter((g) => membersWithId.some((m) => m.role.en === g.key))
