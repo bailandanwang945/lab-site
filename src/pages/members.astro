@@ -71,14 +71,16 @@ const membersWithId = memberEntries
     return rankA - rankB || a.nameText.localeCompare(b.nameText);
   });
 
-const groupDefsZh = [
-  { key: '教授、博士生导师', title: '导师' },
-  { key: '博士生', title: '博士生' },
-  { key: '硕士生', title: '硕士生' },
-];
-const memberGroups = groupDefsZh
-  .filter((g) => membersWithId.some((m) => m.role.zh === g.key))
-  .map((g) => ({ ...g, members: membersWithId.filter((m) => m.role.zh === g.key) }));
+// 显示分组：导师 → 博士生 → 硕士生 → 已毕业（已毕业不按角色拆分，单独成栏置于末尾）
+function displayGroupZh(roleZh: string, statusZh: string) {
+  if (isLeadRoleZh(roleZh)) return '导师';
+  if (formerStatuses.includes(statusZh)) return '已毕业';
+  return roleZh; // 博士生 / 硕士生 / 研究助理
+}
+const groupOrderZh = ['导师', '博士生', '硕士生', '研究助理', '已毕业'];
+const memberGroups = groupOrderZh
+  .filter((title) => membersWithId.some((m) => displayGroupZh(m.role.zh, m.statusText) === title))
+  .map((title) => ({ title, members: membersWithId.filter((m) => displayGroupZh(m.role.zh, m.statusText) === title) }));
 const pageDesc = '查看课题组成员列表与角色分组。';
 ---
 

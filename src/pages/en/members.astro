@@ -71,14 +71,23 @@ const membersWithId = memberEntries
     return rankA - rankB || a.nameText.localeCompare(b.nameText);
   });
 
-const groupDefsEn = [
-  { key: 'Professor, Doctoral Supervisor', title: 'Faculty' },
-  { key: 'PhD Student', title: 'PhD Students' },
-  { key: 'Master Student', title: 'Master Students' },
-];
-const memberGroups = groupDefsEn
-  .filter((g) => membersWithId.some((m) => m.role.en === g.key))
-  .map((g) => ({ ...g, members: membersWithId.filter((m) => m.role.en === g.key) }));
+// Display grouping: Faculty → PhD Students → Master Students → Alumni (alumni grouped separately at the end)
+function displayGroupEn(roleEn: string, statusEn: string) {
+  if (isLeadRoleEn(roleEn)) return 'Faculty';
+  if (formerStatuses.includes(statusEn)) return 'Alumni';
+  return roleEn; // 'PhD Student' / 'Master Student' / 'RA'
+}
+const groupOrderEn = ['Faculty', 'PhD Student', 'Master Student', 'RA', 'Alumni'];
+const memberGroups = groupOrderEn
+  .filter((key) => membersWithId.some((m) => displayGroupEn(m.role.en, m.statusText) === key))
+  .map((key) => {
+    const title =
+      key === 'PhD Student' ? 'PhD Students' :
+      key === 'Master Student' ? 'Master Students' :
+      key === 'RA' ? 'Research Assistants' :
+      key;
+    return { title, members: membersWithId.filter((m) => displayGroupEn(m.role.en, m.statusText) === key) };
+  });
 const pageDesc = 'Browse our lab members and role groups.';
 ---
 
