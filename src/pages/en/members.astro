@@ -94,33 +94,49 @@ const pageDesc = 'Browse our lab members and role groups.';
 <BaseLayout title="Members" desc={pageDesc} lang="en" pathPrefix="/en">
   <section class="page-head" data-reveal>
     <h1 class="page-title">Members</h1>
+    <p class="page-sub">Grouped by faculty, PhD students, master students and alumni.</p>
   </section>
 
-  <section class="members-groups">
-    {memberGroups.map((group) => (
-      <div class="member-group" data-reveal>
-        <h2 class="member-group-title">{group.title}</h2>
-        <div class="grid grid-3">
-          {group.members.map((m) => (
-            <a
-              href={b(`/en/members/${m.id}/`)}
-              class="card card-hover card-link member-card"
-              data-reveal
-            >
-              <img
-                class="member-avatar"
-                src={m.avatarResolved}
-                alt={`${m.nameText} avatar`}
-                loading="lazy"
-                decoding="async"
-              />
-              <h3>{m.nameText}</h3>
-              <p class="member-role"><span class="badge-muted">{m.role.en}</span></p>
-            </a>
-          ))}
+  <section class="filter-wrap" data-members-filter-root data-reveal>
+    <input
+      class="filter-input"
+      type="search"
+      data-member-search
+      placeholder="Search members by name or research area..."
+      aria-label="Search members"
+    />
+    <p class="empty-state" data-empty-state hidden>No matching members. Try a different keyword.</p>
+
+    <div class="members-groups">
+      {memberGroups.map((group) => (
+        <div class="member-group" data-member-group data-reveal>
+          <h2 class="member-group-title">{group.title}</h2>
+          <div class="grid grid-3">
+            {group.members.map((m) => (
+              <a
+                href={b(`/en/members/${m.id}/`)}
+                class="card card-hover card-link member-card"
+                data-member-card
+                data-name={m.nameText}
+                data-area={m.areaText}
+                data-role={m.role.en}
+                data-reveal
+              >
+                <img
+                  class="member-avatar"
+                  src={m.avatarResolved}
+                  alt={`${m.nameText} avatar`}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <h3>{m.nameText}</h3>
+                <p class="member-role"><span class="badge-muted">{m.role.en}</span></p>
+              </a>
+            ))}
+          </div>
         </div>
-      </div>
-    ))}
+      ))}
+    </div>
   </section>
 </BaseLayout>
 

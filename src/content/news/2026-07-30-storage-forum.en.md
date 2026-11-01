@@ -1,5 +1,5 @@
 ---
-slug: "storage-forum-2026"
+slug: "storage-forum"
 date: "2026-07-30"
 title:
   zh: "崔明建教授应邀在南方电网多元储能产业集群建设技术研讨会作专题讲座"

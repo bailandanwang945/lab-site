@@ -87,33 +87,49 @@ const pageDesc = '查看课题组成员列表与角色分组。';
 <BaseLayout title="成员" desc={pageDesc} lang="zh" pathPrefix="">
   <section class="page-head" data-reveal>
     <h1 class="page-title">成员列表</h1>
+    <p class="page-sub">按导师、博士生、硕士生与已毕业分组展示。</p>
   </section>
 
-  <section class="members-groups">
-    {memberGroups.map((group) => (
-      <div class="member-group" data-reveal>
-        <h2 class="member-group-title">{group.title}</h2>
-        <div class="grid grid-3">
-          {group.members.map((m) => (
-            <a
-              href={b(`/members/${m.id}/`)}
-              class="card card-hover card-link member-card"
-              data-reveal
-            >
-              <img
-                class="member-avatar"
-                src={m.avatarResolved}
-                alt={`${m.nameText} 头像`}
-                loading="lazy"
-                decoding="async"
-              />
-              <h3>{m.nameText}</h3>
-              <p class="member-role"><span class="badge-muted">{m.role.zh}</span></p>
-            </a>
-          ))}
+  <section class="filter-wrap" data-members-filter-root data-reveal>
+    <input
+      class="filter-input"
+      type="search"
+      data-member-search
+      placeholder="搜索成员姓名 / 研究方向..."
+      aria-label="搜索成员"
+    />
+    <p class="empty-state" data-empty-state hidden>没有匹配的成员，请调整关键词。</p>
+
+    <div class="members-groups">
+      {memberGroups.map((group) => (
+        <div class="member-group" data-member-group data-reveal>
+          <h2 class="member-group-title">{group.title}</h2>
+          <div class="grid grid-3">
+            {group.members.map((m) => (
+              <a
+                href={b(`/members/${m.id}/`)}
+                class="card card-hover card-link member-card"
+                data-member-card
+                data-name={m.nameText}
+                data-area={m.areaText}
+                data-role={m.role.zh}
+                data-reveal
+              >
+                <img
+                  class="member-avatar"
+                  src={m.avatarResolved}
+                  alt={`${m.nameText} 头像`}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <h3>{m.nameText}</h3>
+                <p class="member-role"><span class="badge-muted">{m.role.zh}</span></p>
+              </a>
+            ))}
+          </div>
         </div>
-      </div>
-    ))}
+      ))}
+    </div>
   </section>
 </BaseLayout>
 
