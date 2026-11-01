@@ -2,6 +2,7 @@
 import { b, asset } from '../utils/seo';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import QuickNav from '../components/QuickNav.astro';
+import Badge from '../components/Badge.astro';
 import siteZh from '../data/site.zh.json';
 
 const t = siteZh;
@@ -10,7 +11,7 @@ const highlightLinks = ['/members/', '/papers/', '/join/'];
 <BaseLayout title="首页" desc={t.home.intro} lang="zh" pathPrefix="">
   <section class="card hero hero-photo hero-center mb-5" data-reveal>
     <img class="hero-media" src={asset('/images/tju-gate1895.jpg')} alt="天津大学北洋园校区 1895 门楼" />
-    <img class="hero-badge" src={asset('/images/tju_badge_white.svg')} alt="天津大学校徽" width="88" height="88" />
+    <Badge class="hero-badge" variant="white" />
     <div class="hero-affil" data-reveal data-reveal-delay="40">天津大学 · 电气自动化与信息工程学院</div>
     <h1 class="hero-title" data-reveal data-reveal-delay="70">{t.siteName}</h1>
     <p class="hero-subtitle" data-reveal data-reveal-delay="120">{t.home.intro}</p>
