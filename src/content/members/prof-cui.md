@@ -11,7 +11,7 @@ area:
   en: "Renewable Forecasting · Power System Operation · Cyber Security · AI"
 avatar: "/member/images/prof-cui.jpg"
 links:
-  email: "mj_cui@tju.edu.cn"
+  email: "mjcui@tju.edu.cn"
   scholar: "https://scholar.google.com/citations?user=LONxHZ0AAAAJ"
 ---
 

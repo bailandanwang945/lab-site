@@ -29,6 +29,6 @@ The group welcomes applications from **master's** and **PhD students** across di
 
 ## Contact
 
-- **Email**: mj_cui@tju.edu.cn
+- **Email**: mjcui@tju.edu.cn
 - **Address**: School of Electrical Automation and Information Engineering, Tianjin University, Building 26, Zone D, No. 92 Weijin Road, Nankai District, Tianjin, China
 - **Office hours**: Weekdays
