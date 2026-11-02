@@ -77,16 +77,18 @@ function displayGroupEn(roleEn: string, statusEn: string) {
   if (formerStatuses.includes(statusEn)) return 'Alumni';
   return roleEn; // 'PhD Student' / 'Master Student' / 'RA'
 }
-const groupOrderEn = ['Faculty', 'PhD Student', 'Master Student', 'RA', 'Alumni'];
+const leadMember = membersWithId.find((m) => isLeadRoleEn(m.role.en));
+const nonLeadMembers = membersWithId.filter((m) => !isLeadRoleEn(m.role.en));
+const groupOrderEn = ['PhD Student', 'Master Student', 'RA', 'Alumni'];
 const memberGroups = groupOrderEn
-  .filter((key) => membersWithId.some((m) => displayGroupEn(m.role.en, m.statusText) === key))
+  .filter((key) => nonLeadMembers.some((m) => displayGroupEn(m.role.en, m.statusText) === key))
   .map((key) => {
     const title =
       key === 'PhD Student' ? 'PhD Students' :
       key === 'Master Student' ? 'Master Students' :
       key === 'RA' ? 'Research Assistants' :
       key;
-    return { title, members: membersWithId.filter((m) => displayGroupEn(m.role.en, m.statusText) === key) };
+    return { title, members: nonLeadMembers.filter((m) => displayGroupEn(m.role.en, m.statusText) === key) };
   });
 const pageDesc = 'Browse our lab members and role groups.';
 ---
@@ -94,7 +96,7 @@ const pageDesc = 'Browse our lab members and role groups.';
 <BaseLayout title="Members" desc={pageDesc} lang="en" pathPrefix="/en">
   <section class="page-head" data-reveal>
     <h1 class="page-title">Members</h1>
-    <p class="page-sub">Grouped by faculty, PhD students, master students and alumni.</p>
+    <p class="page-sub">Lab lead and current, alumni members.</p>
   </section>
 
   <section class="filter-wrap" data-members-filter-root data-reveal>
@@ -106,6 +108,39 @@ const pageDesc = 'Browse our lab members and role groups.';
       aria-label="Search members"
     />
     <p class="empty-state" data-empty-state hidden>No matching members. Try a different keyword.</p>
+
+    {leadMember && (
+      <div
+        class="member-hero"
+        data-member-card
+        data-name={leadMember.nameText}
+        data-area={leadMember.areaText}
+        data-role={leadMember.role.en}
+        data-reveal
+      >
+        <img
+          class="member-hero-avatar"
+          src={leadMember.avatarResolved}
+          alt={`${leadMember.nameText} avatar`}
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="member-hero-body">
+          <h2 class="member-hero-name">{leadMember.nameText}</h2>
+          <p class="member-hero-role">{leadMember.role.en}</p>
+          <p class="member-hero-area">{leadMember.areaText}</p>
+          <div class="member-hero-links">
+            <a class="member-hero-link" href={b(`/en/members/${leadMember.id}/`)}>Profile</a>
+            {leadMember.links?.email && (
+              <a class="member-hero-link" href={`mailto:${leadMember.links.email}`}>Email</a>
+            )}
+            {leadMember.links?.scholar && (
+              <a class="member-hero-link" href={leadMember.links.scholar} target="_blank" rel="noopener">Google Scholar</a>
+            )}
+          </div>
+        </div>
+      </div>
+    )}
 
     <div class="members-groups">
       {memberGroups.map((group) => (

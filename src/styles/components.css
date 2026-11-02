@@ -942,6 +942,89 @@ html {
   border-color: rgba(64, 182, 129, 0.4);
 }
 
+.member-hero {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-card);
+  padding: 20px 22px;
+  background: linear-gradient(165deg, var(--surface-1), var(--surface-2));
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 8px;
+}
+
+.member-hero-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid var(--line-strong);
+  flex: 0 0 auto;
+  background: rgba(125, 167, 255, 0.18);
+}
+
+.member-hero-body {
+  min-width: 0;
+  flex: 1;
+}
+
+.member-hero-name {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text);
+}
+
+.member-hero-role {
+  font-size: var(--text-sm);
+  color: var(--primary);
+  margin: 4px 0 8px;
+  font-weight: 600;
+}
+
+.member-hero-area {
+  font-size: var(--text-sm);
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.member-hero-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.member-hero-link {
+  font-size: var(--text-xs);
+  color: var(--primary);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  padding: 5px 12px;
+  text-decoration: none;
+  transition: all var(--motion-fast) var(--ease-standard);
+}
+
+.member-hero-link:hover {
+  border-color: var(--primary);
+  background: rgba(0, 70, 140, 0.06);
+}
+
+@media (max-width: 560px) {
+  .member-hero {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  .member-hero-links {
+    justify-content: center;
+  }
+}
+
 .empty-state {
   margin-top: 10px;
   color: var(--muted);
