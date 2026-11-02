@@ -149,14 +149,16 @@ try {
   assert(fs.existsSync(newsDir), 'Missing src/content/news');
   assert(fs.existsSync(papersDir), 'Missing src/content/papers');
   assert(fs.existsSync(membersDir), 'Missing src/content/members');
-  assert(fs.existsSync(projectsDir), 'Missing src/content/projects');
+  // 项目页当前为静态占位（config.ts 中无 projects content collection），
+  // 真实明细补齐前允许 src/content/projects 不存在或为空，
+  // 因此此处不强制要求该目录存在（与 smoke-build / verify-seo-i18n 的兼容逻辑一致）。
   assert(fs.existsSync(joinDir), 'Missing src/content/join');
   assert(fs.existsSync(lifeDir), 'Missing src/content/life');
 
   const newsFiles = collectMarkdownFilesRecursive(newsDir);
   const paperFiles = fs.readdirSync(papersDir).filter((name) => name.endsWith('.md')).map((name) => path.join(papersDir, name));
   const memberFiles = fs.readdirSync(membersDir).filter((name) => name.endsWith('.md')).map((name) => path.join(membersDir, name));
-  const projectFolders = collectDirectories(projectsDir);
+  const projectFolders = fs.existsSync(projectsDir) ? collectDirectories(projectsDir) : [];
   const joinFolders = collectDirectories(joinDir);
 
   assert(newsFiles.length > 0, 'No markdown files in src/content/news');
