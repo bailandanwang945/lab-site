@@ -1,8 +1,8 @@
 ---
-id: "zhang-zixi"
+id: "zhang-zixiao"
 name:
-  zh: "张梓枲"
-  en: "Zhang Zixi"
+  zh: "张梓枭"
+  en: "Zhang Zixiao"
 role:
   zh: "硕士生"
   en: "Master Student"

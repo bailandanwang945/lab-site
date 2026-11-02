@@ -74,12 +74,12 @@ const membersWithId = memberEntries
 // Display grouping: Faculty → PhD Students → Master Students → Alumni (alumni grouped separately at the end)
 function displayGroupEn(roleEn: string, statusEn: string) {
   if (isLeadRoleEn(roleEn)) return 'Faculty';
-  if (formerStatuses.includes(statusEn)) return 'Alumni';
+  if (formerStatuses.includes(statusEn)) return 'Graduates';
   return roleEn; // 'PhD Student' / 'Master Student' / 'RA'
 }
 const leadMember = membersWithId.find((m) => isLeadRoleEn(m.role.en));
 const nonLeadMembers = membersWithId.filter((m) => !isLeadRoleEn(m.role.en));
-const groupOrderEn = ['PhD Student', 'Master Student', 'RA', 'Alumni'];
+const groupOrderEn = ['PhD Student', 'Master Student', 'RA', 'Graduates'];
 const memberGroups = groupOrderEn
   .filter((key) => nonLeadMembers.some((m) => displayGroupEn(m.role.en, m.statusText) === key))
   .map((key) => {
@@ -96,7 +96,7 @@ const pageDesc = 'Browse our lab members and role groups.';
 <BaseLayout title="Members" desc={pageDesc} lang="en" pathPrefix="/en">
   <section class="page-head" data-reveal>
     <h1 class="page-title">Members</h1>
-    <p class="page-sub">Lab lead and current, alumni members.</p>
+    <p class="page-sub">Lab lead, current and graduate members.</p>
   </section>
 
   <section class="filter-wrap" data-members-filter-root data-reveal>

@@ -74,12 +74,12 @@ const membersWithId = memberEntries
 // 显示分组：导师 → 博士生 → 硕士生 → 已毕业（已毕业不按角色拆分，单独成栏置于末尾）
 function displayGroupZh(roleZh: string, statusZh: string) {
   if (isLeadRoleZh(roleZh)) return '导师';
-  if (formerStatuses.includes(statusZh)) return '已毕业';
+  if (formerStatuses.includes(statusZh)) return '毕业生';
   return roleZh; // 博士生 / 硕士生 / 研究助理
 }
 const leadMember = membersWithId.find((m) => isLeadRoleZh(m.role.zh));
 const nonLeadMembers = membersWithId.filter((m) => !isLeadRoleZh(m.role.zh));
-const groupOrderZh = ['博士生', '硕士生', '研究助理', '已毕业'];
+const groupOrderZh = ['博士生', '硕士生', '研究助理', '毕业生'];
 const memberGroups = groupOrderZh
   .filter((title) => nonLeadMembers.some((m) => displayGroupZh(m.role.zh, m.statusText) === title))
   .map((title) => ({ title, members: nonLeadMembers.filter((m) => displayGroupZh(m.role.zh, m.statusText) === title) }));
@@ -89,7 +89,7 @@ const pageDesc = '查看课题组成员列表与角色分组。';
 <BaseLayout title="成员" desc={pageDesc} lang="zh" pathPrefix="">
   <section class="page-head" data-reveal>
     <h1 class="page-title">成员列表</h1>
-    <p class="page-sub">课题负责人与在读、已毕业成员。</p>
+    <p class="page-sub">课题负责人与在读、毕业生成员。</p>
   </section>
 
   <section class="filter-wrap" data-members-filter-root data-reveal>
