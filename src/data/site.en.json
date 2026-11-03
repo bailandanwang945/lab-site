@@ -14,7 +14,9 @@
     "intro": "The Cui Mingjian Lab at the School of Electrical and Information Engineering, Tianjin University, focuses on renewable energy forecasting, power system optimal operation, and power system cyber security, with long-standing work on machine learning and deep learning for power systems.",
     "sections": {
       "highlights": "Highlights",
-      "recentProjects": "Ongoing Projects"
+      "recentProjects": "Ongoing Projects",
+      "research": "Research Directions",
+      "news": "Latest News"
     },
     "highlights": [
       {
@@ -28,6 +30,28 @@
       {
         "title": "Recruitment & Collaboration",
         "desc": "Actively recruiting master's and PhD students (3–4 per year) and undergraduate research interns; open to industry collaboration and joint training."
+      }
+    ],
+    "research": [
+      {
+        "title": "Renewable Energy Forecasting",
+        "desc": "High-precision probabilistic forecasting and uncertainty quantification for wind and solar, enabling safe integration of high renewable share.",
+        "icon": "forecast"
+      },
+      {
+        "title": "Power System Optimal Operation",
+        "desc": "Robust economic dispatch, security-constrained optimization, and distributed coordination under uncertainty.",
+        "icon": "optimize"
+      },
+      {
+        "title": "Power System Cyber Security",
+        "desc": "Attack detection, situational awareness, and resilient defense in cyber-physical power systems.",
+        "icon": "security"
+      },
+      {
+        "title": "AI for Power Systems",
+        "desc": "Theory and applications of machine learning and deep learning in power system sensing, decision, and modeling.",
+        "icon": "ai"
       }
     ],
     "quick": "Quick Links",

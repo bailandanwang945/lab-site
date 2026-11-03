@@ -4,10 +4,36 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import QuickNav from '../components/QuickNav.astro';
 import Badge from '../components/Badge.astro';
 import siteZh from '../data/site.zh.json';
+import { getCollection } from 'astro:content';
+import { buildLocalizedNews } from '../utils/news-localized';
 
 const t = siteZh;
-const highlightLinks = ['/members/', '/papers/', '/join/'];
+
+const newsEntries = await getCollection('news');
+const items = buildLocalizedNews(newsEntries).filter((item) => item.entry.zh);
+const latest = items.slice(0, 3);
+
+const paperCount = (await getCollection('papers')).length;
+const memberCount = (await getCollection('members')).length;
+const stats = [
+  { value: String(paperCount), label: '发表论文' },
+  { value: String(memberCount), label: '课题成员' },
+  { value: '4', label: '研究方向' },
+  { value: 'Top 2%', label: '全球顶尖科学家' },
+];
+
+const researchIcons: Record<string, string> = {
+  forecast:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>',
+  optimize:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/></svg>',
+  security:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>',
+  ai:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 3v2M14 3v2M10 19v2M14 19v2M3 10h2M3 14h2M19 10h2M19 14h2"/></svg>',
+};
 ---
+
 <BaseLayout title="首页" desc={t.home.intro} lang="zh" pathPrefix="">
   <section class="card hero hero-photo hero-center mb-5" data-reveal>
     <img class="hero-media" src={asset('/images/tju-gate1895.webp')} alt="天津大学北洋园校区 1895 门楼" />
@@ -37,19 +63,58 @@ const highlightLinks = ['/members/', '/papers/', '/join/'];
     </div>
   </section>
 
+  <section class="home-stats mb-5" data-reveal>
+    {stats.map((s) => (
+      <div class="home-stat">
+        <span class="home-stat__value">{s.value}</span>
+        <span class="home-stat__label">{s.label}</span>
+      </div>
+    ))}
+  </section>
+
   <section class="mb-5">
     <div class="page-head" data-reveal>
-      <h2 class="page-title">{t.home.sections?.highlights ?? '重点信息'}</h2>
+      <h2 class="page-title">{t.home.sections?.research ?? '研究方向'}</h2>
     </div>
-    <div class="grid grid-3" data-reveal-group>
-      {t.home.highlights.map((h, i) => (
-        <article class="card card-hover card-clickable" data-reveal data-reveal-order={String(i)}>
-          <a class="card-link-overlay" href={highlightLinks[i] ?? '/news'} aria-label={`查看 ${h.title} 详情`}></a>
-          <h3>{h.title}</h3>
-          <p class="mt-4">{h.desc}</p>
-        </article>
+    <div class="home-research" data-reveal-group>
+      {t.home.research.map((r, i) => (
+        <a class="research-card card-hover" href={b('/projects/')} data-reveal data-reveal-order={String(i)}>
+          <span class="research-card__icon" set:html={researchIcons[r.icon] ?? researchIcons.ai}></span>
+          <h3 class="research-card__title">{r.title}</h3>
+          <p class="research-card__desc">{r.desc}</p>
+          <span class="research-card__more">了解更多 →</span>
+        </a>
       ))}
     </div>
+  </section>
+
+  <section class="mb-5">
+    <div class="page-head" data-reveal>
+      <h2 class="page-title">{t.home.sections?.news ?? '最新动态'}</h2>
+    </div>
+    <div class="news-grid" data-reveal-group>
+      {latest.map((n, i) => (
+        <a class="news-card card-hover" href={b(`/news/${n.slug}/`)} data-reveal data-reveal-order={String(i)}>
+          <div class="news-card__media">
+            {n.cover ? (
+              <img src={asset(n.cover)} alt={n.title.zh} loading="lazy" decoding="async" />
+            ) : (
+              <div class="news-card__ph">{n.category?.zh || '新闻'}</div>
+            )}
+          </div>
+          <div class="news-card__body">
+            <div class="news-card__meta">
+              {n.category?.zh && <span class="news-tag">{n.category.zh}</span>}
+              {n.date && <span class="news-card__date">{n.date}</span>}
+            </div>
+            <h3 class="news-card__title">{n.title.zh || n.slug}</h3>
+            {n.summary?.zh && <p class="news-card__summary">{n.summary.zh}</p>}
+            <span class="news-card__more">阅读全文 →</span>
+          </div>
+        </a>
+      ))}
+    </div>
+    <a class="home-news-more" href={b('/news/')}>查看全部新闻 →</a>
   </section>
 
   <section class="card" data-reveal>

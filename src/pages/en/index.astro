@@ -4,10 +4,36 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import QuickNav from '../../components/QuickNav.astro';
 import Badge from '../../components/Badge.astro';
 import siteEn from '../../data/site.en.json';
+import { getCollection } from 'astro:content';
+import { buildLocalizedNews } from '../../utils/news-localized';
 
 const t = siteEn;
-const highlightLinks = ['/en/members/', '/en/papers/', '/en/join/'];
+
+const newsEntries = await getCollection('news');
+const items = buildLocalizedNews(newsEntries).filter((item) => item.entry.en);
+const latest = items.slice(0, 3);
+
+const paperCount = (await getCollection('papers')).length;
+const memberCount = (await getCollection('members')).length;
+const stats = [
+  { value: String(paperCount), label: 'Publications' },
+  { value: String(memberCount), label: 'Members' },
+  { value: '4', label: 'Research Areas' },
+  { value: 'Top 2%', label: 'World Scientists' },
+];
+
+const researchIcons: Record<string, string> = {
+  forecast:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>',
+  optimize:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/></svg>',
+  security:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>',
+  ai:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 3v2M14 3v2M10 19v2M14 19v2M3 10h2M3 14h2M19 10h2M19 14h2"/></svg>',
+};
 ---
+
 <BaseLayout title="Home" desc={t.home.intro} lang="en" pathPrefix="/en">
   <section class="card hero hero-photo hero-center mb-5" data-reveal>
     <img class="hero-media" src={asset('/images/tju-gate1895.webp')} alt="Tianjin University 1895 Gate, Beiyang Park Campus" />
@@ -37,19 +63,58 @@ const highlightLinks = ['/en/members/', '/en/papers/', '/en/join/'];
     </div>
   </section>
 
+  <section class="home-stats mb-5" data-reveal>
+    {stats.map((s) => (
+      <div class="home-stat">
+        <span class="home-stat__value">{s.value}</span>
+        <span class="home-stat__label">{s.label}</span>
+      </div>
+    ))}
+  </section>
+
   <section class="mb-5">
     <div class="page-head" data-reveal>
-      <h2 class="page-title">{t.home.sections?.highlights ?? 'Highlights'}</h2>
+      <h2 class="page-title">{t.home.sections?.research ?? 'Research Directions'}</h2>
     </div>
-    <div class="grid grid-3" data-reveal-group>
-      {t.home.highlights.map((h, i) => (
-        <article class="card card-hover card-clickable" data-reveal data-reveal-order={String(i)}>
-          <a class="card-link-overlay" href={highlightLinks[i] ?? '/en/news'} aria-label={`View ${h.title}`}></a>
-          <h3>{h.title}</h3>
-          <p class="mt-4">{h.desc}</p>
-        </article>
+    <div class="home-research" data-reveal-group>
+      {t.home.research.map((r, i) => (
+        <a class="research-card card-hover" href={b('/en/projects/')} data-reveal data-reveal-order={String(i)}>
+          <span class="research-card__icon" set:html={researchIcons[r.icon] ?? researchIcons.ai}></span>
+          <h3 class="research-card__title">{r.title}</h3>
+          <p class="research-card__desc">{r.desc}</p>
+          <span class="research-card__more">Learn more →</span>
+        </a>
       ))}
     </div>
+  </section>
+
+  <section class="mb-5">
+    <div class="page-head" data-reveal>
+      <h2 class="page-title">{t.home.sections?.news ?? 'Latest News'}</h2>
+    </div>
+    <div class="news-grid" data-reveal-group>
+      {latest.map((n, i) => (
+        <a class="news-card card-hover" href={b(`/en/news/${n.slug}/`)} data-reveal data-reveal-order={String(i)}>
+          <div class="news-card__media">
+            {n.cover ? (
+              <img src={asset(n.cover)} alt={n.title.en} loading="lazy" decoding="async" />
+            ) : (
+              <div class="news-card__ph">{n.category?.en || 'News'}</div>
+            )}
+          </div>
+          <div class="news-card__body">
+            <div class="news-card__meta">
+              {n.category?.en && <span class="news-tag">{n.category.en}</span>}
+              {n.date && <span class="news-card__date">{n.date}</span>}
+            </div>
+            <h3 class="news-card__title">{n.title.en || n.slug}</h3>
+            {n.summary?.en && <p class="news-card__summary">{n.summary.en}</p>}
+            <span class="news-card__more">Read more →</span>
+          </div>
+        </a>
+      ))}
+    </div>
+    <a class="home-news-more" href={b('/en/news/')}>View all news →</a>
   </section>
 
   <section class="card" data-reveal>
