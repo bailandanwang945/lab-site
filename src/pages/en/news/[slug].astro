@@ -1,64 +1,125 @@
 ---
-import { b } from '../../../utils/seo';
+import { b, asset } from '../../../utils/seo';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
 import { buildLocalizedNews } from '../../../utils/news-localized';
-import { summarizeParts } from '../../../utils/seo';
 
 export async function getStaticPaths() {
   const allNews = await getCollection('news');
   const localized = buildLocalizedNews(allNews).filter((item) => item.entry.en);
 
-  return localized
-    .filter((item) => item.entry.en)
-    .map((item) => ({
+  return localized.map((item, idx) => {
+    const related = localized
+      .filter((n) => n.slug !== item.slug)
+      .slice(0, 3)
+      .map((n) => ({
+        slug: n.slug,
+        date: n.date,
+        title: n.title.en || n.title.zh || n.slug,
+        cover: n.cover,
+        categoryEn: n.category?.en,
+      }));
+    const prev = localized[idx + 1];
+    const next = localized[idx - 1];
+    const bodyLen = ((item.entry.en as unknown as { body?: string })?.body?.length) || 0;
+    const readingMinutes = Math.max(1, Math.round(bodyLen / 350));
+    return {
       params: { slug: item.slug },
       props: {
         entry: item.entry.en!,
         title: item.title.en || item.title.zh || item.slug,
         date: item.date,
+        cover: item.cover,
+        categoryEn: item.category?.en,
+        readingMinutes,
         localeAlternates: {
           zh: item.entry.zh ? `/news/${item.slug}/` : undefined,
           en: `/en/news/${item.slug}/`,
-          xDefault: item.entry.zh ? `/news/${item.slug}/` : `/en/news/${item.slug}/`,
+          xDefault: `/en/news/${item.slug}/`,
         },
-        related: localized
-          .filter((n) => n.slug !== item.slug)
-          .slice(0, 3)
-          .map((n) => ({
-            slug: n.slug,
-            date: n.date,
-            title: n.title.en || n.title.zh || n.slug,
-          })),
+        related,
+        prev: prev
+          ? { slug: prev.slug, title: prev.title.en || prev.title.zh || prev.slug }
+          : undefined,
+        next: next
+          ? { slug: next.slug, title: next.title.en || next.title.zh || next.slug }
+          : undefined,
       },
-    }));
+    };
+  });
 }
 
-const { entry, title, date, related, localeAlternates } = Astro.props;
+const { entry, title, date, cover, categoryEn, readingMinutes, related, prev, next, localeAlternates } = Astro.props;
 const { Content } = await render(entry);
-const pageDesc = summarizeParts([date, entry.body], 160) || `${title}${date ? ` · ${date}` : ''}`;
+const pageDesc = `${title}${date ? ` · ${date}` : ''}`;
 ---
 <BaseLayout title={title} desc={pageDesc} lang="en" pathPrefix="/en" ogType="article" localeAlternates={localeAlternates}>
   <section class="detail-shell">
-    <article class="card detail-hero" data-reveal>
+    <nav class="news-crumbs" data-reveal>
+      <a href={b('/en/')}>Home</a> / <a href={b('/en/news/')}>News</a>
+    </nav>
+
+    <header class="detail-hero" data-reveal>
       <h1 class="page-title">{title}</h1>
-      <div class="detail-meta">
+      <div class="news-detail-meta">
+        {categoryEn && <span class="news-tag">{categoryEn}</span>}
         {date && <span class="badge-muted">{date}</span>}
+        <span class="news-card__date">{readingMinutes} min read</span>
       </div>
-    </article>
+    </header>
+
+    {cover ? (
+      <div class="news-detail-cover" data-reveal>
+        <img src={asset(cover)} alt={title} />
+      </div>
+    ) : (
+      <div class="news-detail-cover" data-reveal>
+        <div class="news-detail-cover__ph">{categoryEn || 'News'}</div>
+      </div>
+    )}
 
     <article class="card detail-content news-article" data-reveal>
       <Content />
     </article>
 
-    <article class="card detail-section" data-reveal>
+    <section class="detail-section" data-reveal>
       <h2>More News</h2>
-      <ul class="detail-list">
+      <div class="news-related">
         {related.map((n) => (
-          <li><a href={b(`/en/news/${n.slug}/`)}>{n.title}</a> · {n.date}</li>
+          <a class="news-card card-hover" href={b(`/en/news/${n.slug}/`)}>
+            <div class="news-card__media">
+              {n.cover ? (
+                <img src={asset(n.cover)} alt={n.title} loading="lazy" />
+              ) : (
+                <div class="news-card__ph">{n.categoryEn || 'News'}</div>
+              )}
+            </div>
+            <div class="news-card__body">
+              <div class="news-card__meta">
+                {n.categoryEn && <span class="news-tag">{n.categoryEn}</span>}
+                <span class="news-card__date">{n.date}</span>
+              </div>
+              <h3 class="news-card__title">{n.title}</h3>
+            </div>
+          </a>
         ))}
-      </ul>
-    </article>
+      </div>
+    </section>
+
+    <nav class="news-nav" data-reveal>
+      {prev ? (
+        <a href={b(`/en/news/${prev.slug}/`)}>
+          <span class="news-nav__dir">← Previous</span>
+          <span class="news-nav__title">{prev.title}</span>
+        </a>
+      ) : <span></span>}
+      {next ? (
+        <a href={b(`/en/news/${next.slug}/`)} style="text-align:right">
+          <span class="news-nav__dir">Next →</span>
+          <span class="news-nav__title">{next.title}</span>
+        </a>
+      ) : <span></span>}
+    </nav>
 
     <div class="back-row" data-reveal>
       <a class="btn btn-primary" href={b('/en/news/')} data-history-back>Back to News</a>

@@ -1,11 +1,14 @@
 ---
-import { b } from '../utils/seo';
+import { b, asset } from '../utils/seo';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { buildLocalizedNews } from '../utils/news-localized';
 
 const newsEntries = await getCollection('news');
-const news = buildLocalizedNews(newsEntries).filter((item) => item.entry.zh);
+const items = buildLocalizedNews(newsEntries).filter((item) => item.entry.zh);
+const featured = items[0];
+const rest = items.slice(1);
+const categories = [...new Set(items.map((i) => i.category?.zh).filter(Boolean))] as string[];
 const pageDesc = '查看课题组新闻动态与最近更新。';
 ---
 <BaseLayout title="新闻" desc={pageDesc} lang="zh" pathPrefix="">
@@ -13,28 +16,76 @@ const pageDesc = '查看课题组新闻动态与最近更新。';
     <h1 class="page-title">新闻动态</h1>
   </section>
 
-  <section class="filter-wrap" data-list-filter-root data-reveal>
-    <input
-      class="filter-input"
-      type="search"
-      data-list-search
-      placeholder="搜索新闻标题 / 日期 / 关键词..."
-      aria-label="搜索新闻"
-    />
-    <p class="empty-state" data-empty-state hidden>没有匹配新闻，请调整关键词。</p>
+  <section data-list-filter-root data-reveal>
+    <div class="news-filter-bar">
+      <div class="news-chips">
+        <button class="news-chip is-selected" type="button" data-category-chip="__all">全部</button>
+        {categories.map((c) => (
+          <button class="news-chip" type="button" data-category-chip={c}>{c}</button>
+        ))}
+      </div>
+      <input
+        class="filter-input"
+        type="search"
+        data-list-search
+        placeholder="搜索新闻标题 / 日期 / 关键词..."
+        aria-label="搜索新闻"
+      />
+    </div>
+    <p class="empty-state" data-empty-state hidden>没有匹配新闻，请调整关键词或分类。</p>
 
-    <div class="grid" data-list-intro>
-      {news.map((n, i) => (
+    {featured && (
+      <a
+        class="news-featured card-hover"
+        href={b(`/news/${featured.slug}/`)}
+        data-list-card
+        data-category={featured.category?.zh || ''}
+        data-search-text={`${featured.title.zh || ''} ${featured.date || ''} ${featured.category?.zh || ''} ${featured.slug}`}
+      >
+        <div class="news-featured__media">
+          {featured.cover ? (
+            <img src={asset(featured.cover)} alt={featured.title.zh} loading="lazy" />
+          ) : (
+            <div class="news-featured__ph">{featured.category?.zh || '新闻'}</div>
+          )}
+        </div>
+        <div class="news-featured__body">
+          <div class="news-card__meta">
+            {featured.category?.zh && <span class="news-tag">{featured.category.zh}</span>}
+            {featured.date && <span class="news-card__date">{featured.date}</span>}
+          </div>
+          <h2 class="news-featured__title">{featured.title.zh || featured.slug}</h2>
+          {featured.summary?.zh && <p class="news-featured__summary">{featured.summary.zh}</p>}
+          <span class="news-featured__more">阅读全文 →</span>
+        </div>
+      </a>
+    )}
+
+    <div class="news-grid">
+      {rest.map((n) => (
         <a
+          class="news-card card-hover"
           href={b(`/news/${n.slug}/`)}
-          class="card card-hover card-link stack-sm"
-          data-list-intro-item
-          {...(i < 8 ? { 'data-list-intro-active': true } : {})}
           data-list-card
-          data-search-text={`${n.title.zh || ''} ${n.title.en || ''} ${n.date || ''} ${n.slug}`}
+          data-category={n.category?.zh || ''}
+          data-search-text={`${n.title.zh || ''} ${n.date || ''} ${n.category?.zh || ''} ${n.slug}`}
         >
-          <h3>{n.title.zh || n.title.en || n.slug}</h3>
-          {n.date && <p>{n.date}</p>}
+          <div class="news-card__media">
+            {n.cover ? (
+              <img src={asset(n.cover)} alt={n.title.zh} loading="lazy" />
+            ) : (
+              <div class="news-card__ph">{n.category?.zh || '新闻'}</div>
+            )}
+          </div>
+          <div class="news-card__body">
+            <div class="news-card__meta">
+              {n.category?.zh && <span class="news-tag">{n.category.zh}</span>}
+              {n.date && <span class="news-card__date">{n.date}</span>}
+            </div>
+            <h3 class="news-card__title">{n.title.zh || n.slug}</h3>
+            {n.summary?.zh && <p class="news-card__summary">{n.summary.zh}</p>}
+            <span class="news-card__more">阅读全文 →</span>
+          </div>
         </a>
       ))}
     </div>

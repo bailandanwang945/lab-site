@@ -221,9 +221,18 @@ function initListSearch() {
     const input = root.querySelector('[data-list-search]');
     const cards = Array.from(root.querySelectorAll('[data-list-card]'));
     const emptyState = root.querySelector('[data-empty-state]');
+    const chips = Array.from(root.querySelectorAll('[data-category-chip]'));
 
     if (!input || !cards.length) {
       return;
+    }
+
+    let activeCat = '__all';
+
+    function setActiveChip(catValue) {
+      chips.forEach((btn) => {
+        btn.classList.toggle('is-selected', btn.getAttribute('data-category-chip') === catValue);
+      });
     }
 
     function applyFilter() {
@@ -233,7 +242,10 @@ function initListSearch() {
 
       allCards.forEach((card) => {
         const text = (card.getAttribute('data-search-text') || '').toLowerCase();
-        const shouldShow = !q || text.includes(q);
+        const cat = (card.getAttribute('data-category') || '').toLowerCase();
+        const queryMatch = !q || text.includes(q);
+        const catMatch = activeCat === '__all' || cat === activeCat;
+        const shouldShow = queryMatch && catMatch;
         card.classList.toggle('is-filter-hidden', !shouldShow);
         if (shouldShow) {
           visibleCount += 1;
@@ -253,8 +265,17 @@ function initListSearch() {
       }
     }
 
+    chips.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        activeCat = btn.getAttribute('data-category-chip') || '__all';
+        setActiveChip(activeCat);
+        applyFilter();
+      });
+    });
+
     input.addEventListener('input', applyFilter);
 
+    setActiveChip(activeCat);
     applyFilter();
   });
 }

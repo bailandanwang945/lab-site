@@ -27,6 +27,9 @@ const news = defineCollection({
   schema: z.object({
     date: newsDate,
     title: i18nText,
+    cover: z.string().min(1).optional(),
+    category: i18nText.optional(),
+    summary: i18nText.optional(),
   })
 });
 
