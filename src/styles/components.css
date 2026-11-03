@@ -43,7 +43,9 @@
   width: 34px;
   height: 34px;
   border-radius: 22%;
-  display: block;
+  display: inline-flex;
+  flex: none;
+  overflow: hidden;
   box-shadow: var(--shadow-ring);
 }
 
@@ -151,9 +153,22 @@
 }
 
 .footer-badge {
-  width: 26px;
-  height: 26px;
-  border-radius: 22%;
+  width:26px;
+  height:26px;
+  border-radius:22%;
+  display:inline-flex;
+  flex:none;
+  overflow:hidden;
+}
+
+/* 内联校徽：SVG 充满容器 */
+.badge-inline {
+  display: inline-flex;
+  flex: none;
+}
+.badge-inline svg {
+  width: 100%;
+  height: 100%;
   display: block;
 }
 
@@ -364,6 +379,9 @@
   height: 88px;
   border-radius: 22%;
   margin-bottom: 16px;
+  display: inline-flex;
+  flex: none;
+  overflow: hidden;
   box-shadow: var(--shadow-ring);
 }
 .hero-affil {
@@ -924,6 +942,92 @@ html {
   border-color: rgba(64, 182, 129, 0.4);
 }
 
+.member-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--primary);
+  border-radius: var(--radius-card);
+  padding: 26px 22px;
+  background: linear-gradient(165deg, var(--surface-1), var(--surface-2));
+  box-shadow: var(--shadow-sm);
+}
+
+.member-hero-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid var(--line-strong);
+  flex: 0 0 auto;
+  background: rgba(125, 167, 255, 0.18);
+}
+
+.member-hero-body {
+  min-width: 0;
+  flex: 1;
+  text-align: center;
+}
+
+.member-hero-name {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text);
+}
+
+.member-hero-role {
+  font-size: var(--text-sm);
+  color: var(--primary);
+  margin: 4px 0 8px;
+  font-weight: 600;
+}
+
+.member-hero-area {
+  font-size: var(--text-sm);
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.member-hero-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  justify-content: center;
+}
+
+.member-hero-link {
+  font-size: var(--text-xs);
+  color: var(--primary);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  padding: 5px 12px;
+  text-decoration: none;
+  transition: all var(--motion-fast) var(--ease-standard);
+}
+
+.member-hero-link:hover {
+  border-color: var(--primary);
+  background: rgba(0, 70, 140, 0.06);
+}
+
+@media (max-width: 560px) {
+  .member-hero {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  .member-hero-links {
+    justify-content: center;
+  }
+}
+
 .empty-state {
   margin-top: 10px;
   color: var(--muted);
@@ -956,4 +1060,129 @@ html {
   .footer-inner {
     flex-direction: column;
   }
+}
+
+/* ===== 论文页：年代时间轴 ===== */
+.page-sub {
+  color: var(--text-soft);
+  font-size: var(--text-sm);
+  margin-top: 6px;
+}
+
+.papers-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-top: 12px;
+}
+
+.paper-year-group {
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: 22px;
+}
+
+.paper-year-rail {
+  position: relative;
+}
+
+.paper-year-num {
+  display: block;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--primary);
+  letter-spacing: 0.02em;
+  position: sticky;
+  top: 88px;
+}
+
+.paper-year-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-left: 2px solid var(--line);
+  padding-left: 22px;
+}
+
+.paper-row {
+  display: block;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-1);
+  padding: 14px 16px;
+}
+
+.paper-row.is-top {
+  border-left: 3px solid var(--accent-gold);
+}
+
+.paper-row::before {
+  content: '';
+  position: absolute;
+  left: -29px;
+  top: 22px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 2px solid var(--bg-elevated);
+}
+
+.paper-row-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.venue-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.v-ieee {
+  background: rgba(31, 111, 184, 0.12);
+  color: var(--primary);
+}
+
+.v-applied {
+  background: rgba(28, 140, 90, 0.14);
+  color: #1c8c5a;
+}
+
+.v-cn {
+  background: rgba(224, 169, 46, 0.16);
+  color: var(--accent-gold-ink);
+}
+
+.paper-link-ico {
+  font-size: 13px;
+  color: var(--text-soft);
+  line-height: 1;
+}
+
+.paper-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.45;
+  margin: 0 0 6px;
+}
+
+.paper-meta {
+  font-size: 13px;
+  color: var(--text-soft);
+  line-height: 1.5;
+  margin: 0;
+}
+
+[data-list-group].is-filter-hidden {
+  display: none;
 }

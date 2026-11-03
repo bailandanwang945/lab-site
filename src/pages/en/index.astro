@@ -2,6 +2,7 @@
 import { b, asset } from '../../utils/seo';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import QuickNav from '../../components/QuickNav.astro';
+import Badge from '../../components/Badge.astro';
 import siteEn from '../../data/site.en.json';
 
 const t = siteEn;
@@ -10,7 +11,7 @@ const highlightLinks = ['/en/members/', '/en/papers/', '/en/join/'];
 <BaseLayout title="Home" desc={t.home.intro} lang="en" pathPrefix="/en">
   <section class="card hero hero-photo hero-center mb-5" data-reveal>
     <img class="hero-media" src={asset('/images/tju-gate1895.jpg')} alt="Tianjin University 1895 Gate, Beiyang Park Campus" />
-    <img class="hero-badge" src={asset('/images/tju_badge_white.svg')} alt="Tianjin University badge" width="88" height="88" />
+    <Badge class="hero-badge" variant="white" />
     <div class="hero-affil" data-reveal data-reveal-delay="40">Tianjin University · School of Electrical and Information Engineering</div>
     <h1 class="hero-title" data-reveal data-reveal-delay="70">{t.siteName}</h1>
     <p class="hero-subtitle" data-reveal data-reveal-delay="120">{t.home.intro}</p>

@@ -102,6 +102,10 @@
   display: none;
 }
 
+.member-group.is-filter-hidden {
+  display: none;
+}
+
 .member-card.is-filter-visible {
   animation: memberIn 360ms var(--ease-standard);
 }

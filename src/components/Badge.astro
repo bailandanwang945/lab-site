@@ -1,0 +1,21 @@
+---
+// 校徽内联组件：将 SVG 直接打进 HTML，避免外部图片请求（预览代理/base 路径/弱网均不影响显示）
+// 蓝底版用于页眉与页脚，白底版用于首页 hero
+import badgeBlue from '../../public/images/tju_badge_blue.svg?raw';
+import badgeWhite from '../../public/images/tju_badge_white.svg?raw';
+
+interface Props {
+  variant?: 'blue' | 'white';
+  class?: string;
+}
+
+const { variant = 'blue', class: className = '' } = Astro.props;
+const svg = variant === 'white' ? badgeWhite : badgeBlue;
+---
+
+<span
+  class:list={[className, 'badge-inline']}
+  role="img"
+  aria-label={variant === 'white' ? 'Tianjin University badge' : '天津大学校徽'}
+  set:html={svg}
+/>

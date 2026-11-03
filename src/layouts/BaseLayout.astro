@@ -2,6 +2,7 @@
 import siteZh from '../data/site.zh.json';
 import siteEn from '../data/site.en.json';
 import { ClientRouter } from 'astro:transitions';
+import Badge from '../components/Badge.astro';
 import { b, BASE, buildDefaultLocaleAlternates, normalizeSitePath, stripBasePath, toAbsoluteUrl, withBasePath } from '../utils/seo';
 import type { LocaleAlternates } from '../utils/seo';
 
@@ -144,7 +145,7 @@ const navPathCompare = {
     <header class="site-header">
       <div class="container nav">
         <a class="brand" href={navPathResolved.home} aria-label={t.siteName}>
-          <img class="brand-badge" src={`${base}images/tju_badge_blue.svg`} alt="天津大学校徽" width="34" height="34" />
+          <Badge class="brand-badge" variant="blue" />
           <span class="brand-text">{lang === 'zh' ? '天津大学 · ' : 'Tianjin University · '}{t.brand}</span>
         </a>
         <nav class="nav-links">
@@ -167,7 +168,7 @@ const navPathCompare = {
     <footer class="footer">
       <div class="container footer-inner">
         <div class="footer-brand">
-          <img class="footer-badge" src={`${base}images/tju_badge_blue.svg`} alt="天津大学校徽" width="26" height="26" />
+          <Badge class="footer-badge" variant="blue" />
           <span>天津大学 · {t.siteName}</span>
         </div>
         <span class="lang-switch">

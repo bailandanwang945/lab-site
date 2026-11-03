@@ -23,6 +23,18 @@ const siteUrl = resolveConfiguredSiteUrl(process.env.MODE || 'production');
 const base = new URL(siteUrl).pathname.replace(/\/+$/, '');
 const withBase = (p) => `${base}${p}`;
 
+// 项目页当前为占位（无真实项目），dist/projects/project-1 这类具体项目页可能不存在；
+// life（实验室）已按需求从导航/首页入口隐藏（页面保留），故首页链接要求中也需排除。
+function listProjectSlugs() {
+  const projectsDir = path.resolve('src/content/projects');
+  if (!fs.existsSync(projectsDir)) return [];
+  return fs
+    .readdirSync(projectsDir, { withFileTypes: true })
+    .filter((e) => e.isDirectory())
+    .map((e) => e.name);
+}
+const hasProjects = listProjectSlugs().length > 0;
+
 const checks = [
   {
     file: 'dist/index.html',
@@ -36,7 +48,6 @@ const checks = [
       `href="${withBase('/projects/')}"`,
       `href="${withBase('/papers/')}"`,
       `href="${withBase('/news/')}"`,
-      `href="${withBase('/life/')}"`,
       `href="${withBase('/join/')}"`,
     ],
   },
@@ -52,18 +63,21 @@ const checks = [
       `href="${withBase('/en/projects/')}"`,
       `href="${withBase('/en/papers/')}"`,
       `href="${withBase('/en/news/')}"`,
-      `href="${withBase('/en/life/')}"`,
       `href="${withBase('/en/join/')}"`,
     ],
   },
-  {
-    file: 'dist/projects/project-1/index.html',
-    includes: [
-      `<link rel="canonical" href="${siteUrl}projects/project-1/">`,
-      `<link rel="alternate" hreflang="en" href="${siteUrl}en/projects/project-1/">`,
-      `href="${withBase('/en/projects/project-1/')}"`,
-    ],
-  },
+  ...(hasProjects
+    ? [
+        {
+          file: 'dist/projects/project-1/index.html',
+          includes: [
+            `<link rel="canonical" href="${siteUrl}projects/project-1/">`,
+            `<link rel="alternate" hreflang="en" href="${siteUrl}en/projects/project-1/">`,
+            `href="${withBase('/en/projects/project-1/')}"`,
+          ],
+        },
+      ]
+    : []),
   {
     file: 'dist/life/index.html',
     includes: [

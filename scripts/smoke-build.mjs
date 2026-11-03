@@ -84,6 +84,7 @@ function getExpectedMissingCmsVars() {
 
 const expectedMissingCmsVars = getExpectedMissingCmsVars();
 const cmsConfigured = expectedMissingCmsVars.length === 0;
+const hasProjects = listProjectSlugs().length > 0;
 const unexpectedMissingCmsVars = ['CMS_GITHUB_REPO', 'CMS_OAUTH_BASE_URL', 'PUBLIC_SITE_URL'].filter(
   (item) => !expectedMissingCmsVars.includes(item),
 );
@@ -102,8 +103,9 @@ const checks = [
     includes: ['成员列表', '搜索成员'],
   },
   {
+    // 项目页当前为占位页（"内容整理中"），仅在存在真实项目时才要求搜索框。
     file: 'dist/projects/index.html',
-    includes: ['项目', '搜索项目'],
+    includes: hasProjects ? ['项目', '搜索项目'] : ['项目', '内容整理中'],
   },
   {
     file: 'dist/papers/index.html',

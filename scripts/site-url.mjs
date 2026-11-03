@@ -36,6 +36,10 @@ export function resolveConfiguredSiteUrl(mode = 'production') {
  * 站内链接会指向域名根目录，导致 404。
  */
 export function resolveConfiguredBasePath(mode = 'production') {
+  // 本地 dev 预览不挂在子路径下，置空 base，避免站内链接与静态资源带上
+  // /lab-site/ 前缀而在本地 404/裂图；生产构建（GitHub Pages 子路径部署）
+  // 仍保留从站点地址推导出的 /lab-site。
+  if (mode === 'development') return '/';
   const { pathname } = new URL(resolveConfiguredSiteUrl(mode));
   const base = pathname.replace(/\/+$/, '');
   return base === '' ? '/' : base;

@@ -102,6 +102,7 @@ function initMembersFilter() {
     const cards = Array.from(root.querySelectorAll('[data-member-card]'));
     const roleButtons = Array.from(root.querySelectorAll('[data-role-filter]'));
     const emptyState = root.querySelector('[data-empty-state]');
+    const groupEls = Array.from(root.querySelectorAll('[data-member-group]'));
 
     if (!input || !cards.length) {
       return;
@@ -145,6 +146,14 @@ function initMembersFilter() {
       if (emptyState) {
         emptyState.hidden = visibleCount !== 0;
       }
+
+      // 整组无可见卡片时隐藏该分组（含其标题），避免搜索后空组标题悬空。
+      groupEls.forEach((g) => {
+        const anyVisible = Array.from(g.querySelectorAll('[data-member-card]')).some(
+          (c) => !c.classList.contains('is-filter-hidden'),
+        );
+        g.classList.toggle('is-filter-hidden', !anyVisible);
+      });
     }
 
     roleButtons.forEach((btn) => {
@@ -229,6 +238,14 @@ function initListSearch() {
         if (shouldShow) {
           visibleCount += 1;
         }
+      });
+
+      const groups = Array.from(root.querySelectorAll('[data-list-group]'));
+      groups.forEach((g) => {
+        const anyVisible = Array.from(g.querySelectorAll('[data-list-card]')).some(
+          (c) => !c.classList.contains('is-filter-hidden'),
+        );
+        g.classList.toggle('is-filter-hidden', !anyVisible);
       });
 
       if (emptyState) {
