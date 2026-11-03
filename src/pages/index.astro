@@ -35,23 +35,27 @@ const researchIcons: Record<string, string> = {
 ---
 
 <BaseLayout title="首页" desc={t.home.intro} lang="zh" pathPrefix="">
-  <section class="card hero hero-photo hero-center mb-5" data-reveal>
-    <img class="hero-media" src={asset('/images/tju-gate1895.webp')} alt="天津大学北洋园校区 1895 门楼" />
-    <Badge class="hero-badge" variant="white" />
-    <div class="hero-affil" data-reveal data-reveal-delay="40">天津大学 · 电气自动化与信息工程学院</div>
-    <h1 class="hero-title" data-reveal data-reveal-delay="70">{t.siteName}</h1>
-    <p class="hero-subtitle" data-reveal data-reveal-delay="120">{t.home.intro}</p>
-    <div class="hero-actions" data-reveal data-reveal-delay="180">
-      <a class="btn btn-gold" href={b('/join/')}>招生合作</a>
-      <a class="btn btn-ghost" href={b('/papers/')}>查看论文</a>
-      <a class="btn btn-ghost" href={b('/projects/')}>查看项目</a>
-      <a class="btn btn-ghost" href={b('/members/')}>了解成员</a>
+  <section class="card hero-split mb-5" data-reveal>
+    <div class="hero-split__media">
+      <img src={asset('/images/microgrid-base.webp')} alt="天津大学微电网合作基地（光伏户外实验场景）" />
+    </div>
+    <div class="hero-split__panel">
+      <Badge class="hero-badge" variant="blue" />
+      <div class="hero-affil">天津大学 · 电气自动化与信息工程学院</div>
+      <h1 class="hero-title">{t.siteName}</h1>
+      <p class="hero-subtitle">{t.home.intro}</p>
+      <div class="hero-actions">
+        <a class="btn btn-gold" href={b('/join/')}>招生合作</a>
+        <a class="btn btn-ghost" href={b('/papers/')}>查看论文</a>
+        <a class="btn btn-ghost" href={b('/projects/')}>查看项目</a>
+        <a class="btn btn-ghost" href={b('/members/')}>了解成员</a>
+      </div>
     </div>
   </section>
 
   <section class="card home-about mb-5" data-reveal>
     <div class="home-about-media">
-      <img src={asset('/images/tju-nine.webp')} alt="天津大学第九教学楼" loading="lazy" decoding="async" />
+      <img src={asset('/images/smart-grid-lab.webp')} alt="智能电网教育部重点实验室 · 微电网国际合作基地" loading="lazy" decoding="async" />
     </div>
     <div class="home-about-body">
       <div class="page-head"><h2 class="page-title">{t.home.platform.title}</h2></div>
