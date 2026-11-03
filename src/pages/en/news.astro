@@ -1,11 +1,14 @@
 ---
-import { b } from '../../utils/seo';
+import { b, asset } from '../../utils/seo';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { buildLocalizedNews } from '../../utils/news-localized';
 
 const newsEntries = await getCollection('news');
-const news = buildLocalizedNews(newsEntries).filter((item) => item.entry.en);
+const items = buildLocalizedNews(newsEntries).filter((item) => item.entry.en);
+const featured = items[0];
+const rest = items.slice(1);
+const categories = [...new Set(items.map((i) => i.category?.en).filter(Boolean))] as string[];
 const pageDesc = 'Browse our lab news updates and recent announcements.';
 ---
 <BaseLayout title="News" desc={pageDesc} lang="en" pathPrefix="/en">
@@ -13,30 +16,78 @@ const pageDesc = 'Browse our lab news updates and recent announcements.';
     <h1 class="page-title">News</h1>
   </section>
 
-  <section class="filter-wrap" data-list-filter-root data-reveal>
-    <input
-      class="filter-input"
-      type="search"
-      data-list-search
-      placeholder="Search title / date / keywords..."
-      aria-label="Search news"
-    />
-    <p class="empty-state" data-empty-state hidden>No matching news found. Try another keyword.</p>
+  <section data-list-filter-root data-reveal>
+    <div class="news-filter-bar">
+      <div class="news-chips">
+        <button class="news-chip is-selected" type="button" data-category-chip="__all">All</button>
+        {categories.map((c) => (
+          <button class="news-chip" type="button" data-category-chip={c}>{c}</button>
+        ))}
+      </div>
+      <input
+        class="filter-input"
+        type="search"
+        data-list-search
+        placeholder="Search title / date / keywords..."
+        aria-label="Search news"
+      />
+    </div>
+    <p class="empty-state" data-empty-state hidden>No matching news found. Try another keyword or category.</p>
 
-  <div class="grid" data-list-intro>
-    {news.map((n, i) => (
+    {featured && (
       <a
-        href={b(`/en/news/${n.slug}/`)}
-        class="card card-hover card-link stack-sm"
-        data-list-intro-item
-        {...(i < 8 ? { 'data-list-intro-active': true } : {})}
+        class="news-featured card-hover"
+        href={b(`/en/news/${featured.slug}/`)}
         data-list-card
-        data-search-text={`${n.title.en || ''} ${n.title.zh || ''} ${n.date || ''} ${n.slug}`}
+        data-category={featured.category?.en || ''}
+        data-search-text={`${featured.title.en || ''} ${featured.date || ''} ${featured.category?.en || ''} ${featured.slug}`}
       >
-        <h3>{n.title.en || n.title.zh || n.slug}</h3>
-        {n.date && <p>{n.date}</p>}
+        <div class="news-featured__media">
+          {featured.cover ? (
+            <img src={asset(featured.cover)} alt={featured.title.en} loading="lazy" />
+          ) : (
+            <div class="news-featured__ph">{featured.category?.en || 'News'}</div>
+          )}
+        </div>
+        <div class="news-featured__body">
+          <div class="news-card__meta">
+            {featured.category?.en && <span class="news-tag">{featured.category.en}</span>}
+            {featured.date && <span class="news-card__date">{featured.date}</span>}
+          </div>
+          <h2 class="news-featured__title">{featured.title.en || featured.slug}</h2>
+          {featured.summary?.en && <p class="news-featured__summary">{featured.summary.en}</p>}
+          <span class="news-featured__more">Read more →</span>
+        </div>
       </a>
-    ))}
-  </div>
+    )}
+
+    <div class="news-grid">
+      {rest.map((n) => (
+        <a
+          class="news-card card-hover"
+          href={b(`/en/news/${n.slug}/`)}
+          data-list-card
+          data-category={n.category?.en || ''}
+          data-search-text={`${n.title.en || ''} ${n.date || ''} ${n.category?.en || ''} ${n.slug}`}
+        >
+          <div class="news-card__media">
+            {n.cover ? (
+              <img src={asset(n.cover)} alt={n.title.en} loading="lazy" />
+            ) : (
+              <div class="news-card__ph">{n.category?.en || 'News'}</div>
+            )}
+          </div>
+          <div class="news-card__body">
+            <div class="news-card__meta">
+              {n.category?.en && <span class="news-tag">{n.category.en}</span>}
+              {n.date && <span class="news-card__date">{n.date}</span>}
+            </div>
+            <h3 class="news-card__title">{n.title.en || n.slug}</h3>
+            {n.summary?.en && <p class="news-card__summary">{n.summary.en}</p>}
+            <span class="news-card__more">Read more →</span>
+          </div>
+        </a>
+      ))}
+    </div>
   </section>
 </BaseLayout>

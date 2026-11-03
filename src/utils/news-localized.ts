@@ -16,6 +16,15 @@ type LocalizedNewsItem = {
     zh: string;
     en: string;
   };
+  cover?: string;
+  category?: {
+    zh?: string;
+    en?: string;
+  };
+  summary?: {
+    zh?: string;
+    en?: string;
+  };
   entry: {
     zh?: NewsEntry;
     en?: NewsEntry;
@@ -68,6 +77,9 @@ function parseEntryInfo(entry: NewsEntry) {
       en: inferredTitleEn,
     },
     date: entry.data.date || inferredDate,
+    cover: entry.data.cover,
+    category: entry.data.category,
+    summary: entry.data.summary,
   };
 }
 
@@ -98,6 +110,25 @@ export function buildLocalizedNews(entries: NewsEntry[]): LocalizedNewsItem[] {
     }
     if (info.title.en) {
       item.title.en = info.title.en;
+    }
+    if (!item.cover && info.cover) {
+      item.cover = info.cover;
+    }
+    if (info.category?.zh) {
+      item.category = item.category || {};
+      item.category.zh = info.category.zh;
+    }
+    if (info.category?.en) {
+      item.category = item.category || {};
+      item.category.en = info.category.en;
+    }
+    if (info.summary?.zh) {
+      item.summary = item.summary || {};
+      item.summary.zh = info.summary.zh;
+    }
+    if (info.summary?.en) {
+      item.summary = item.summary || {};
+      item.summary.en = info.summary.en;
     }
     item.entry[info.lang] = entry;
   });
