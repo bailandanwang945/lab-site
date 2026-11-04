@@ -1,8 +1,9 @@
 ---
-import { b } from '../../utils/seo';
+import { b, asset } from '../../utils/seo';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
 import { summarizeText } from '../../utils/seo';
+import Badge from '../../components/Badge.astro';
 
 const joinEntries = await getCollection('join');
 const entry =
@@ -19,13 +20,46 @@ const pageDesc = summarizeText(entry.body) || 'Explore recruitment and collabora
 ---
 <BaseLayout title={pageTitle} desc={pageDesc} lang="en" pathPrefix="/en">
   <section class="detail-shell">
-    <article class="card detail-hero" data-reveal>
-      <h1 class="page-title">{pageTitle}</h1>
+    <article class="card join-hero" data-reveal>
+      <div class="join-hero__media">
+        <img src={asset('/images/join-hero-gate.webp')} alt="Tianjin University gate, with the university name clearly visible" />
+      </div>
+      <div class="join-hero__panel">
+        <Badge class="hero-badge" variant="blue" />
+        <div class="hero-affil">Tianjin University · School of Electrical and Information Engineering</div>
+        <h1 class="hero-title">{pageTitle}</h1>
+        <p class="hero-subtitle">We welcome passionate students in new-energy power systems, smart grids, and AI-driven research to join our group.</p>
+        <div class="hero-actions">
+          <a class="btn btn-gold" href="#recruit">Admissions</a>
+          <a class="btn btn-ghost" href={b('/en/members/')}>Meet the Team</a>
+        </div>
+      </div>
     </article>
 
-    <article class="card detail-content news-article" data-reveal>
+    <article class="card detail-content news-article" id="recruit" data-reveal>
       <Content />
     </article>
+
+    <section class="join-gallery" data-reveal>
+      <div class="join-gallery__head">
+        <div class="join-gallery__title">Research Platforms &amp; Campus</div>
+        <div class="join-gallery__sub">Doing meaningful research in real-world settings</div>
+      </div>
+      <div class="join-gallery__grid">
+        <figure class="join-gallery__item">
+          <img class="join-gallery__img" src={asset('/images/microgrid-base.webp')} alt="Microgrid International Cooperation Base (outdoor PV experiment site)" loading="lazy" decoding="async" />
+          <figcaption class="join-gallery__cap">Microgrid Int'l Cooperation Base · New-energy &amp; Smart-grid Platform</figcaption>
+        </figure>
+        <figure class="join-gallery__item">
+          <img class="join-gallery__img" src={asset('/images/smart-grid-lab.webp')} alt="Key Lab of Smart Grid (MOE) · control and experiment platform" loading="lazy" decoding="async" />
+          <figcaption class="join-gallery__cap">Key Lab of Smart Grid (MOE) · Control &amp; Experiment Platform</figcaption>
+        </figure>
+        <figure class="join-gallery__item">
+          <img class="join-gallery__img" src={asset('/images/join-gallery-dome.webp')} alt="Tianjin University campus dome building (a century-old institution)" loading="lazy" decoding="async" />
+          <figcaption class="join-gallery__cap">Tianjin University Campus · A Century-old Institution</figcaption>
+        </figure>
+      </div>
+    </section>
 
     <div class="back-row" data-reveal>
       <a class="btn btn-primary" href={b('/en/')}>Back to Home</a>
