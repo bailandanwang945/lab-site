@@ -7,8 +7,11 @@ role:
   zh: "硕士生"
   en: "Master Student"
 status:
-  zh: "在读（2026级专硕）"
-  en: "Current (Professional Master, Class of 2026)"
+  zh: "在读"
+  en: "Current"
+grade:
+  zh: "2026级"
+  en: "Class of 2026"
 area:
   zh: "新能源预测、电力系统优化运行"
   en: "Renewable Energy Forecasting, Power System Operation"

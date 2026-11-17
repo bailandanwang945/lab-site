@@ -791,6 +791,113 @@
   }
 }
 
+/* 项目页：已公开项目清单（数据来自导师主页 projects 字段，与「主持科研项目」同源） */
+.project-board,
+.project-note {
+  padding: 28px 32px;
+}
+
+.project-board-title {
+  border-left: 4px solid var(--primary);
+  padding-left: 12px;
+  color: var(--primary);
+  font-size: var(--text-lg);
+  line-height: 1.4;
+}
+
+.project-board-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.project-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.project-item {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  align-items: start;
+  gap: 18px;
+  padding: 22px 4px;
+  border-bottom: 1px solid var(--line);
+}
+
+.project-item:last-child {
+  border-bottom: 0;
+  padding-bottom: 8px;
+}
+
+.project-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--gradient-accent);
+  color: #fff;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.project-item-body {
+  min-width: 0;
+}
+
+.project-name {
+  margin: 2px 0 6px;
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.project-owner {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.project-empty {
+  padding: 24px 4px 8px;
+}
+
+.project-note {
+  display: grid;
+  gap: 10px;
+}
+
+.project-note p {
+  line-height: var(--lh-copy);
+}
+
+@media (max-width: 640px) {
+  .project-board,
+  .project-note {
+    padding: 22px 20px;
+  }
+
+  .project-item {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .project-index {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+  }
+}
+
 /* 项目详情：横幅图（借鉴 IMSL 研究块的通栏横幅） */
 .detail-banner {
   position: relative;
@@ -1041,7 +1148,7 @@ html {
   display: block;
   border: 1px solid var(--line);
   object-fit: cover;
-  object-position: center;
+  object-position: center 20%;
   margin-bottom: 12px;
   background: rgba(125, 167, 255, 0.18);
 }
@@ -1122,7 +1229,7 @@ html {
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  object-position: center;
+  object-position: center 20%;
   border: 4px solid #fff;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
   flex: 0 0 auto;

@@ -74,6 +74,7 @@ const members = defineCollection({
       en: z.string().min(1)
     }),
     status: z.union([z.string().min(1), i18nText]).optional(),
+    grade: i18nText.optional(),
     area: z.union([z.string().min(1), i18nText]).optional(),
     honor: i18nText.optional(),
     honorLines: bilingualList.optional(),

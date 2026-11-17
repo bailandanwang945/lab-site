@@ -23,7 +23,7 @@ const siteUrl = resolveConfiguredSiteUrl(process.env.MODE || 'production');
 const base = new URL(siteUrl).pathname.replace(/\/+$/, '');
 const withBase = (p) => `${base}${p}`;
 
-// 项目页当前为占位（无真实项目），dist/projects/project-1 这类具体项目页可能不存在；
+// 项目页仅列已公开项目名称，尚无独立项目详情页，dist/projects/project-1 这类页面可能不存在；
 // life（实验室）已按需求从导航/首页入口隐藏（页面保留），故首页链接要求中也需排除。
 function listProjectSlugs() {
   const projectsDir = path.resolve('src/content/projects');

@@ -39,11 +39,11 @@ researchTags:
     - "Artificial Intelligence"
 bio:
   zh: |-
-    国家四青人才，天津大学英才教授(长聘正高)，博/硕士生导师，王成山院士领导的智能电网团队(同时也是教育部“全国高校黄大年式教师团队”)成员，IEEE高级会员，中国电工技术学会高级会员。长期从事新能源和储能并网、电力系统优化运行、电力系统网络安全和人工智能等方面研究。主持国家科技重大专项(2030)课题、国家重点研发计划子课题、天津市自然科学基金重大项目等。
+    国家四青人才，天津大学英才教授(长聘正高)，博/硕士生导师，王成山院士领导的智能电网团队(同时也是教育部“全国高校黄大年式教师团队”)成员，IEEE高级会员，中国电工技术学会高级会员。长期从事新能源和储能并网、电力系统优化运行、电力系统网络安全和人工智能等方面研究。主持国家科技重大专项(2030)课题、国家重点研发计划子课题等。
 
     担任国际期刊《IEEE Trans. Power Systems》(2021-2023)、《IEEE Power Engineering Letters》、《IET Generation, Transmission Distribution》、《IET Smart Grid》、《IEEE Open Access Journal of Power and Energy (OAJPE)》(2020-2025)、《Protection and Control of Modern Power Systems (PCMP)》和《PeerJ Computer Science》编委(Editor/Associate Editor)；《电力系统保护与控制》青年助理编辑；《智慧电力》专家顾问委员会委员；中国电工技术学会青年工作委员会委员；同时担任多个国内外学术期刊的评审专家，包括IEEE PES Letters和七个IEEE Trans会刊，以及多个国际学术会议的专题主席。2017年获“IEEE PES General Meeting最佳会议论文(Best Paper Award)”；2016和2017年《中国电机工程学报》优秀审稿专家；2016年《智慧电力》优秀作者及优秀审稿专家；《广东电力》2017年优秀审稿专家及创刊30周年优秀审稿专家；2018年IEEE TSG优秀审稿专家；2019年和2020年IEEE TSTE优秀审稿专家；2020年获“领跑者5000--中国精品科技期刊顶尖学术论文(2019年F5000)”；2024年第四届中国科技产业化促进会科学技术奖二等奖；2023-2026年全球前2%顶尖科学家榜单入选者。
   en: |-
-    Cui Mingjian is a National Four-Youth Talent, Yingcai Professor (Tenured Full Professor) and PhD/MSc Supervisor at Tianjin University, a member of the smart grid team led by Academician Wang Chengshan (also a Ministry of Education “Huang Danian-style Teacher Team”), an IEEE Senior Member and a Senior Member of the China Electrotechnical Society. He has long been engaged in research on renewable energy and storage grid integration, power system optimal operation, power system cyber security, and artificial intelligence. He has led the National Science and Technology Major Project (2030) task, sub-tasks of the National Key R&D Program, and the Tianjin Natural Science Foundation Major Project, among others.
+    Cui Mingjian is a National Four-Youth Talent, Yingcai Professor (Tenured Full Professor) and PhD/MSc Supervisor at Tianjin University, a member of the smart grid team led by Academician Wang Chengshan (also a Ministry of Education “Huang Danian-style Teacher Team”), an IEEE Senior Member and a Senior Member of the China Electrotechnical Society. He has long been engaged in research on renewable energy and storage grid integration, power system optimal operation, power system cyber security, and artificial intelligence. He has led the National Science and Technology Major Project (2030) task and sub-tasks of the National Key R&D Program, among others.
 
     He serves as Editor or Associate Editor for international journals including IEEE Trans. Power Systems (2021-2023), IEEE Power Engineering Letters, IET Generation, Transmission Distribution, IET Smart Grid, IEEE Open Access Journal of Power and Energy (OAJPE) (2020-2025), Protection and Control of Modern Power Systems (PCMP) and PeerJ Computer Science; Youth Associate Editor of Power System Protection and Control; member of the Expert Advisory Committee of Smart Power; member of the Youth Work Committee of the China Electrotechnical Society; and a reviewer for many domestic and international journals, including IEEE PES Letters and seven IEEE Trans journals, as well as Session Chair for multiple international conferences. He received the IEEE PES General Meeting Best Paper Award in 2017; Outstanding Reviewer of Proceedings of the CSEE in 2016 and 2017; Outstanding Author and Outstanding Reviewer of Smart Power in 2016; Outstanding Reviewer and 30th Anniversary Outstanding Reviewer of Guangdong Electric Power in 2017; Outstanding Reviewer of IEEE TSG in 2018; Outstanding Reviewer of IEEE TSTE in 2019 and 2020; the F5000 award for China's top-cited papers in 2020 (2019 F5000); the 2nd Prize of the 4th Science and Technology Award of the China Science and Technology Industrialization Promotion Association in 2024; and has been listed among the World's Top 2% Scientists from 2023 to 2026.
 editorial:
@@ -96,11 +96,9 @@ projects:
   zh:
     - "国家科技重大专项（2030）课题"
     - "国家重点研发计划子课题"
-    - "天津市自然科学基金重大项目"
   en:
     - "National Science and Technology Major Project (2030) task"
     - "National Key R&D Program sub-task"
-    - "Tianjin Natural Science Foundation Major Project"
 experience:
   zh:
     - period: "2021.12 – 至今"
