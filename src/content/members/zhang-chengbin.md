@@ -12,4 +12,5 @@ status:
 grade:
   zh: "2022级"
   en: "Class of 2022"
+avatar: "/member/images/zhang-chengbin.png"
 ---
