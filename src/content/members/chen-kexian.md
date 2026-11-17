@@ -9,6 +9,9 @@ role:
 status:
   zh: "在读"
   en: "Current"
+grade:
+  zh: "2023级"
+  en: "Class of 2023"
 area:
   zh: "新能源与储能、电力系统优化运行"
   en: "New Energy & Storage, Power System Operation"

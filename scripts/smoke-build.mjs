@@ -103,9 +103,14 @@ const checks = [
     includes: ['成员列表', '搜索成员'],
   },
   {
-    // 项目页当前为占位页（"内容整理中"），仅在存在真实项目时才要求搜索框。
+    // 项目页已改为展示导师主页 projects 字段中的已公开项目（与「主持科研项目」板块同源）。
+    // 若以后重建 src/content/projects 集合并启用项目搜索，再切回 hasProjects 分支。
     file: 'dist/projects/index.html',
-    includes: hasProjects ? ['项目', '搜索项目'] : ['项目', '内容整理中'],
+    includes: hasProjects ? ['项目', '搜索项目'] : ['项目', '已公开科研项目'],
+  },
+  {
+    file: 'dist/en/projects/index.html',
+    includes: ['Projects', 'Publicly Disclosed Projects'],
   },
   {
     file: 'dist/papers/index.html',

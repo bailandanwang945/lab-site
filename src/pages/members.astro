@@ -61,6 +61,7 @@ const membersWithId = memberEntries
     honorChips: (pickI18nText(e.data.honor, 'zh') || '').split(/[、,]/).map((s) => s.trim()).filter(Boolean),
     researchText: pickI18nText(e.data.research, 'zh'),
     statusText: pickI18nText(e.data.status, 'zh'),
+    gradeText: pickI18nText(e.data.grade, 'zh'),
     avatarResolved: resolveMemberAvatar({ ...e.data, id: e.slug }),
   }))
   .sort((a, b) => {
@@ -163,7 +164,7 @@ const pageDesc = '查看课题组成员列表与角色分组。';
                 data-member-card
                 data-name={m.nameText}
                 data-area={m.areaText}
-                data-role={m.role.zh}
+                data-role={m.gradeText ? `${m.gradeText} ${m.role.zh}` : m.role.zh}
                 data-reveal
               >
                 <img
@@ -174,7 +175,7 @@ const pageDesc = '查看课题组成员列表与角色分组。';
                   decoding="async"
                 />
                 <h3>{m.nameText}</h3>
-                <p class="member-role"><span class="badge-muted">{m.role.zh}</span></p>
+                <p class="member-role"><span class="badge-muted">{m.gradeText ? `${m.gradeText} ${m.role.zh}` : m.role.zh}</span></p>
               </a>
             ))}
           </div>

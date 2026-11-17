@@ -61,6 +61,7 @@ const membersWithId = memberEntries
     honorChips: (pickI18nText(e.data.honor, 'en') || '').split(/[、,]/).map((s) => s.trim()).filter(Boolean),
     researchText: pickI18nText(e.data.research, 'en'),
     statusText: pickI18nText(e.data.status, 'en'),
+    gradeText: pickI18nText(e.data.grade, 'en'),
     avatarResolved: resolveMemberAvatar(e.data),
   }))
   .sort((a, b) => {
@@ -170,7 +171,7 @@ const pageDesc = 'Browse our lab members and role groups.';
                 data-member-card
                 data-name={m.nameText}
                 data-area={m.areaText}
-                data-role={m.role.en}
+                data-role={m.gradeText ? `${m.gradeText}, ${m.role.en}` : m.role.en}
                 data-reveal
               >
                 <img
@@ -181,7 +182,7 @@ const pageDesc = 'Browse our lab members and role groups.';
                   decoding="async"
                 />
                 <h3>{m.nameText}</h3>
-                <p class="member-role"><span class="badge-muted">{m.role.en}</span></p>
+                <p class="member-role"><span class="badge-muted">{m.gradeText ? `${m.gradeText}, ${m.role.en}` : m.role.en}</span></p>
               </a>
             ))}
           </div>

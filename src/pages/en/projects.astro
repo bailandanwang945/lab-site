@@ -1,21 +1,69 @@
 ---
 import { b } from '../../utils/seo';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { pickI18nText } from '../../utils/i18n-text';
 
-const pageDesc = 'Our ongoing and completed projects are primarily NSFC (National Natural Science Foundation of China) grants and industry (horizontal) collaborations. Content is being organized.';
+// Project entries share a single source with the PI profile's "Research Projects" section.
+// Only publicly disclosed project names are listed here, with no unconfirmed grant numbers,
+// performance targets, or client information.
+const memberEntries = await getCollection('members');
+const isLeadMember = (e: (typeof memberEntries)[number]) =>
+  e.data.id === 'prof-cui' || e.slug === 'prof-cui' || Boolean(e.data.honorLines);
+const withProjects = memberEntries.filter((e) => (e.data.projects?.en ?? []).length > 0);
+const leadSources = withProjects.filter(isLeadMember);
+const sources = leadSources.length > 0 ? leadSources : withProjects;
+
+const seen = new Set<string>();
+const projects: Array<{ name: string; owner: string }> = [];
+for (const e of sources) {
+  for (const name of e.data.projects?.en ?? []) {
+    if (seen.has(name)) continue;
+    seen.add(name);
+    projects.push({ name, owner: pickI18nText(e.data.name, 'en') });
+  }
+}
+
+const pageDesc = `${projects.length} publicly disclosed research projects, listing only names cleared for public release.`;
 ---
 <BaseLayout title="Projects" desc={pageDesc} lang="en" pathPrefix="/en">
   <section class="page-head" data-reveal>
     <h1 class="page-title">Projects</h1>
+    <p class="page-sub">Our work is supported by national research programs and industry collaborations. This section lists only projects cleared for public disclosure.</p>
   </section>
 
-  <section class="card detail-hero" data-reveal>
-    <span class="badge-muted">In progress</span>
-    <h2 class="mt-4">NSFC Grants &amp; Industry (Horizontal) Projects</h2>
-    <p class="mt-4">Our ongoing and completed projects are primarily National Natural Science Foundation of China (NSFC) grants and industry (horizontal) collaborations. This section is being organized and will go live once specific project information is added.</p>
-    <div class="back-row" data-reveal>
-      <a class="btn btn-primary" href={b('/en/')}>Back to Home</a>
-      <a class="btn btn-ghost" href={b('/en/papers/')}>View Papers</a>
+  <section class="card project-board" data-reveal>
+    <div class="project-board-head">
+      <h2 class="project-board-title">Publicly Disclosed Projects</h2>
+      <span class="badge-muted">{projects.length} {projects.length === 1 ? 'project' : 'projects'}</span>
     </div>
+
+    {projects.length > 0 ? (
+      <ol class="project-list">
+        {projects.map((item, i) => (
+          <li class="project-item">
+            <span class="project-index">{String(i + 1).padStart(2, '0')}</span>
+            <div class="project-item-body">
+              <h3 class="project-name">{item.name}</h3>
+              <p class="project-owner">Led by {item.owner}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    ) : (
+      <p class="project-empty">No publicly disclosed projects are available yet.</p>
+    )}
   </section>
+
+  <section class="card project-note" data-reveal>
+    <h2 class="project-board-title">About project information</h2>
+    <p>This section follows a public-disclosure policy: only projects already public and approved for disclosure by the relevant parties are listed. Client names, in-progress performance targets, and unpublished patent content are not published on this site. Please refer to official public sources for details.</p>
+    <p>Additional project information will be added as it becomes available.</p>
+  </section>
+
+  <div class="back-row" data-reveal>
+    <a class="btn btn-primary" href={b('/en/')}>Back to Home</a>
+    <a class="btn btn-ghost" href={b('/en/papers/')}>View Papers</a>
+    <a class="btn btn-ghost" href={b('/en/members/prof-cui/')}>PI Profile</a>
+  </div>
 </BaseLayout>

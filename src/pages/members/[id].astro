@@ -21,6 +21,7 @@ const nameText = pickI18nText(member.name, 'zh');
 const areaText = pickI18nText(member.area, 'zh');
 const honorText = pickI18nText(member.honor, 'zh');
 const taglineText = honorText || areaText;
+const gradeText = pickI18nText(member.grade, 'zh');
 const honorLines = member.honorLines?.zh ?? [];
 const isPiHero = honorLines.length > 0;
 const bio = pickI18nText(member.bio, 'zh');
@@ -73,7 +74,7 @@ const pageDesc = `${nameText}，${member.role.zh}。${research || honorText || a
         <div class="detail-hero-main">
           <h1 class="page-title">{nameText}</h1>
           <div class="detail-meta">
-            <span class="badge">{member.role.zh}</span>
+            <span class="badge">{gradeText ? `${gradeText} ${member.role.zh}` : member.role.zh}</span>
             {taglineText && <span class="badge-muted">{taglineText}</span>}
           </div>
         </div>

@@ -1,21 +1,68 @@
 ---
 import { b } from '../utils/seo';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { pickI18nText } from '../utils/i18n-text';
 
-const pageDesc = '课题组在研与结题项目以国家自然科学基金（国自然）及横向课题为主，内容整理中。';
+// 项目数据与导师主页「主持科研项目」板块同源，直接读取成员内容中的 projects 字段，
+// 避免两处手工同步。仅展示已公开且获准公开的项目名称，不补写未经确认的编号、指标或客户信息。
+const memberEntries = await getCollection('members');
+const isLeadMember = (e: (typeof memberEntries)[number]) =>
+  e.data.id === 'prof-cui' || e.slug === 'prof-cui' || Boolean(e.data.honorLines);
+const withProjects = memberEntries.filter((e) => (e.data.projects?.zh ?? []).length > 0);
+const leadSources = withProjects.filter(isLeadMember);
+const sources = leadSources.length > 0 ? leadSources : withProjects;
+
+const seen = new Set<string>();
+const projects: Array<{ name: string; owner: string }> = [];
+for (const e of sources) {
+  for (const name of e.data.projects?.zh ?? []) {
+    if (seen.has(name)) continue;
+    seen.add(name);
+    projects.push({ name, owner: pickI18nText(e.data.name, 'zh') });
+  }
+}
+
+const pageDesc = `课题组已公开科研项目 ${projects.length} 项，仅列已获准公开的项目名称。`;
 ---
 <BaseLayout title="项目" desc={pageDesc} lang="zh" pathPrefix="">
   <section class="page-head" data-reveal>
     <h1 class="page-title">项目</h1>
+    <p class="page-sub">课题组承担国家级科研项目与横向课题，本栏目按公开口径展示已获准公开的项目。</p>
   </section>
 
-  <section class="card detail-hero" data-reveal>
-    <span class="badge-muted">内容整理中</span>
-    <h2 class="mt-4">国家自然科学基金（国自然）及横向课题</h2>
-    <p class="mt-4">课题组在研与结题项目以国家自然科学基金（国自然）及横向课题为主。本栏目内容正在整理中，待补充具体项目信息后上线。</p>
-    <div class="back-row" data-reveal>
-      <a class="btn btn-primary" href={b('/')}>返回首页</a>
-      <a class="btn btn-ghost" href={b('/papers/')}>查看论文</a>
+  <section class="card project-board" data-reveal>
+    <div class="project-board-head">
+      <h2 class="project-board-title">已公开科研项目</h2>
+      <span class="badge-muted">{projects.length} 项</span>
     </div>
+
+    {projects.length > 0 ? (
+      <ol class="project-list">
+        {projects.map((item, i) => (
+          <li class="project-item">
+            <span class="project-index">{String(i + 1).padStart(2, '0')}</span>
+            <div class="project-item-body">
+              <h3 class="project-name">{item.name}</h3>
+              <p class="project-owner">主持 {item.owner}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    ) : (
+      <p class="project-empty">暂无可公开的项目信息。</p>
+    )}
   </section>
+
+  <section class="card project-note" data-reveal>
+    <h2 class="project-board-title">关于项目信息</h2>
+    <p>本栏目仅展示已公开且经相关单位同意公开的科研项目。客户名称、在研指标、未公开专利内容不在本站展示，具体信息以官方公开渠道为准。</p>
+    <p>更多项目明细持续补充中。</p>
+  </section>
+
+  <div class="back-row" data-reveal>
+    <a class="btn btn-primary" href={b('/')}>返回首页</a>
+    <a class="btn btn-ghost" href={b('/papers/')}>查看论文</a>
+    <a class="btn btn-ghost" href={b('/members/prof-cui/')}>导师主页</a>
+  </div>
 </BaseLayout>
